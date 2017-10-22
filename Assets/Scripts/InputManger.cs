@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 
 public class InputManger : MonoBehaviour {
@@ -9,26 +10,35 @@ public class InputManger : MonoBehaviour {
 	[SerializeField]
 	private InputField myInputField;
 
-	[SerializeField]
 	private string currentWord;
 
 	[SerializeField]
 	private Text textWordToShow;
 
+	[SerializeField]
+	private int numOfTrys;
+
+	[SerializeField]
+	private Button myButton;
+
+	private bool isActiveInteractable;
+
 	private string wordToShow;
+
+	private event Action OnButtonDown;
 
 	// Use this for initialization
 	void Start () {
 		SetSpaceNewWord(currentWord);
+		isActiveInteractable = true;
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
-		if(Input.GetButtonDown("ENTER"))
+		if(Input.GetButtonDown("ENTER")&&isActiveAndEnabled)
 		{
-			CheckCharInWord(myInputField.textComponent.text, currentWord);
-
+			CheckCharInWord();
 		}
 	}
 
@@ -42,16 +52,29 @@ public class InputManger : MonoBehaviour {
 		textWordToShow.text = wordToShow;
 	}
 
-	public void CheckCharInWord(string simpleChar, string wordToCheck)
+	public void CheckCharInWord()
 	{
-		for(int i = 0; i < wordToCheck.Length; i++)
+		if(OnButtonDown!=null)
+			OnButtonDown();
+
+		bool tempBool = false;
+		for(int i = 0; i < currentWord.Length; i++)
 		{
-			if(wordToCheck.Substring(i,1)==simpleChar)
+			if(currentWord.Substring(i,1)==myInputField.textComponent.text)
 			{
-				ChangeChar(i, simpleChar);
-				Debug.Log("hapend");
+				tempBool = true;
+				ChangeChar(i, myInputField.textComponent.text);
 			}
 			
+		}
+
+		if(!tempBool)
+		{
+			numOfTrys--;
+			if(numOfTrys<=0)
+			{
+				Debug.Log("Player Lose");
+			}
 		}
 			
 	}
@@ -72,8 +95,39 @@ public class InputManger : MonoBehaviour {
 		
 		wordToShow = tempString;
 		textWordToShow.text = tempString;
+		CheckIfWin();
 
 	}
+
+	public void CheckIfWin ()
+	{
+		for(int i = 0; i < wordToShow.Length; i++ )
+		{
+			if(wordToShow.Substring(i,1)=="_")
+			return;
+		}
+		Debug.Log("Player Win");
+	}
+
+	public void SetLockState(bool lockState)
+	{
+		myInputField.interactable = lockState;
+		isActiveInteractable = lockState;
+		myButton.interactable = lockState;
+	}
+
+	public void SetWordOfGame(string word)
+	{
+		currentWord = word;
+	}
+
+
+	public void AdActionPresButton(Action newAction)
+	{	
+		if(OnButtonDown==null)
+			OnButtonDown += newAction;
+	}
+	
 
 
 }
