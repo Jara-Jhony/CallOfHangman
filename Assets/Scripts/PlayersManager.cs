@@ -5,129 +5,145 @@ using UnityEngine.UI;
 
 public class PlayersManager : MonoBehaviour {
 
+    #region Properties
 
-	[SerializeField]
-	private string[] wordsForSinglePlayer;
+    [SerializeField]
+    private string[] wordsForSinglePlayer;
 
-	[SerializeField]
-	private GameObject wordSelectionMenu;
+    [SerializeField]
+    private GameObject wordSelectionMenu;
 
-	[SerializeField]
-	private GameObject playerModeMenu;
+    [SerializeField]
+    private GameObject playerModeMenu;
 
-	[SerializeField]
-	private InputField myInputField;
+    [SerializeField]
+    private InputField myInputField;
 
-	[SerializeField]
-	private Text textOfWordSelection;
+    [SerializeField]
+    private Text textOfWordSelection;
 
-	private bool isFirstPlayersSelected;
+    private bool isFirstPlayersSelected;
 
-	[SerializeField]
-	private GameObject[] playersMatchs = new GameObject[2];
+    [SerializeField]
+    private GameObject[] playersMatchs = new GameObject[2];
 
-	private int numOfTurns;
+    private int numOfTurns;
 
-	private int currentTurn;
+    private int currentTurn;
 
-	// Use this for initialization
-	void Start () {
-		
-		playersMatchs[0].GetComponent<InputManger>().AdActionPresButton(OnEnterChar);
-		playersMatchs[1].GetComponent<InputManger>().AdActionPresButton(OnEnterChar);
+    #endregion
 
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    #region Unity Functions
 
-	public void SetUpSinglePlayer()
-	{
-		playerModeMenu.SetActive(false);
-		numOfTurns = 1;
-		playersMatchs[0].GetComponent<InputManger>().SetWordOfGame(wordsForSinglePlayer[Random.Range(0,wordsForSinglePlayer.Length)]);
-		ActivateMatches();
+    private void Start()
+    {
+        playersMatchs[0].GetComponent<InputManger>().AdActionPresButton(OnEnterChar);
+        playersMatchs[1].GetComponent<InputManger>().AdActionPresButton(OnEnterChar);
 
-	}
+        //Subscribing to the button functions
+        ButtonManager.onSingleplayer += SetupSingleplayer;
+        ButtonManager.onLocalMultiplayer += SetupLocalMultiplayer;
+        ButtonManager.onOnlineMultiplayer += SetupOnlineMultiplayer;
+    }
 
-	public void SetUpMultiplayer()
-	{
-		isFirstPlayersSelected = false;
-		playerModeMenu.SetActive(false);
-		numOfTurns = 2;
-		wordSelectionMenu.SetActive(true);
-	}
+    #endregion
 
-	private void ActivateMatches()
-	{
-		for(int i = 0; i<numOfTurns; i++)
-		{
-			playersMatchs[i].SetActive(true);
-		}
-	}
+    #region Class Functions
 
-	public void SelectWord()
-	{	
-		if(!isFirstPlayersSelected)
-		{	
-			isFirstPlayersSelected = true;
-			playersMatchs[0].GetComponent<InputManger>().SetWordOfGame(myInputField.textComponent.text);
-			myInputField.textComponent.text = "";
-			textOfWordSelection.text = "Player 1 close your eyes, Player 2 select a word.";
-		}else
-		{
-			playersMatchs[1].GetComponent<InputManger>().SetWordOfGame(myInputField.textComponent.text);
-			myInputField.textComponent.text = "";
-			textOfWordSelection.text = "Player 2 close your eyes, Player 1 select a word.";
-			wordSelectionMenu.SetActive(false);
-			playersMatchs[0].GetComponent<InputManger>().SetLockState(true);
-			playersMatchs[1].GetComponent<InputManger>().SetLockState(false);
-			ActivateMatches();
-		}
-	}
+    public void SetupSingleplayer()
+    {
+        playerModeMenu.SetActive(false);
+        numOfTurns = 1;
+        playersMatchs[0].GetComponent<InputManger>().SetWordOfGame(wordsForSinglePlayer[Random.Range(0, wordsForSinglePlayer.Length)]);
+        ActivateMatches();
+    }
 
-	public void OnEnterChar()
-	{
-		switch(numOfTurns)
-		{
-			case 1:
-			break;
+    public void SetupLocalMultiplayer()
+    {
+        isFirstPlayersSelected = false;
+        playerModeMenu.SetActive(false);
+        numOfTurns = 2;
+        wordSelectionMenu.SetActive(true);
+    }
 
-			case 2:
+    public void SetupOnlineMultiplayer()
+    {
+        //TODO
+    }
 
-			currentTurn++;
+    private void ActivateMatches()
+    {
+        for (int i = 0; i < numOfTurns; i++)
+        {
+            playersMatchs[i].SetActive(true);
+        }
+    }
 
-			if(currentTurn>=numOfTurns)
-				currentTurn = 0;
+    public void SelectWord()
+    {
+        if (!isFirstPlayersSelected)
+        {
+            isFirstPlayersSelected = true;
+            playersMatchs[0].GetComponent<InputManger>().SetWordOfGame(myInputField.textComponent.text);
+            myInputField.textComponent.text = "";
+            textOfWordSelection.text = "Player 1 close your eyes, Player 2 select a word.";
+        }
+        else
+        {
+            playersMatchs[1].GetComponent<InputManger>().SetWordOfGame(myInputField.textComponent.text);
+            myInputField.textComponent.text = "";
+            textOfWordSelection.text = "Player 2 close your eyes, Player 1 select a word.";
+            wordSelectionMenu.SetActive(false);
 
-			SetUpTurn();
+            playersMatchs[0].GetComponent<InputManger>().SetLockState(true);
+            playersMatchs[1].GetComponent<InputManger>().SetLockState(false);
 
-			break;
+            ActivateMatches();
+        }
+    }
 
-			default:
-			break;
+    public void OnEnterChar()
+    {
+        switch (numOfTurns)
+        {
+            case 1:
+                break;
 
-		}
-	}
+            case 2:
 
-	private void SetUpTurn()
-	{
-		switch(currentTurn)
-		{
-			case 0:
-				playersMatchs[0].GetComponent<InputManger>().SetLockState(true);
-				playersMatchs[1].GetComponent<InputManger>().SetLockState(false);
-			break;
+                currentTurn++;
 
-			case 1:
-				playersMatchs[1].GetComponent<InputManger>().SetLockState(true);
-				playersMatchs[0].GetComponent<InputManger>().SetLockState(false);
-			break;
+                if (currentTurn >= numOfTurns)
+                    currentTurn = 0;
 
-			default:
-			break;
-		}
-	}
+                SetupTurn();
+
+                break;
+
+            default:
+                break;
+
+        }
+    }
+
+    private void SetupTurn()
+    {
+        switch (currentTurn)
+        {
+            case 0:
+                playersMatchs[0].GetComponent<InputManger>().SetLockState(true);
+                playersMatchs[1].GetComponent<InputManger>().SetLockState(false);
+                break;
+
+            case 1:
+                playersMatchs[1].GetComponent<InputManger>().SetLockState(true);
+                playersMatchs[0].GetComponent<InputManger>().SetLockState(false);
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    #endregion
 }

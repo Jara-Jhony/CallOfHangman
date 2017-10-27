@@ -4,130 +4,142 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 
-
 public class InputManger : MonoBehaviour {
 
-	[SerializeField]
-	private InputField myInputField;
+    #region Properties
 
-	private string currentWord;
+    private string wordToShow;
 
-	[SerializeField]
-	private Text textWordToShow;
+    private string currentWord;
 
-	[SerializeField]
-	private int numOfTrys;
+    [SerializeField]
+    private InputField myInputField;
 
-	[SerializeField]
-	private Button myButton;
+    [SerializeField]
+    private Text textWordToShow;
 
-	private bool isActiveInteractable;
+    [SerializeField]
+    private int numOfTrys;
 
-	private string wordToShow;
+    [SerializeField]
+    private Button myButton;
 
-	private event Action OnButtonDown;
+    private bool isActiveInteractable;
 
-	// Use this for initialization
-	void Start () {
-		SetSpaceNewWord(currentWord);
-		isActiveInteractable = true;
-	}
-	
-	// Update is called once per frame
-	void Update () 
-	{
-		if(Input.GetButtonDown("ENTER")&&isActiveAndEnabled)
-		{
-			CheckCharInWord();
-		}
-	}
+    private event Action OnButtonDown;
 
-	public void SetSpaceNewWord(string word)
-	{
-		for(int i = 0; i<word.Length; i++)
-		{
-			wordToShow += "_";
-			
-		}
-		textWordToShow.text = wordToShow;
-	}
+    #endregion
 
-	public void CheckCharInWord()
-	{
-		if(OnButtonDown!=null)
-			OnButtonDown();
+    #region Unity Functions
 
-		bool tempBool = false;
-		for(int i = 0; i < currentWord.Length; i++)
-		{
-			if(currentWord.Substring(i,1)==myInputField.textComponent.text)
-			{
-				tempBool = true;
-				ChangeChar(i, myInputField.textComponent.text);
-			}
-			
-		}
+    private void Start()
+    {
+        SetSpaceNewWord(currentWord);
 
-		if(!tempBool)
-		{
-			numOfTrys--;
-			if(numOfTrys<=0)
-			{
-				Debug.Log("Player Lose");
-			}
-		}
-			
-	}
+        isActiveInteractable = true;
+    }
 
-	public void ChangeChar(int targetIndex, string charToChange)
-	{
-		string tempString = "";
-		for(int i = 0; i < currentWord.Length; i++)
-		{	
-			if(i != targetIndex)
-			{
-				tempString += wordToShow.Substring(i,1);
-			}else
-			{
-				tempString += charToChange;
-			}
-		}
-		
-		wordToShow = tempString;
-		textWordToShow.text = tempString;
-		CheckIfWin();
+    private void Update()
+    {
+        if (Input.GetButtonDown("ENTER") && isActiveAndEnabled)
+        {
+            CheckCharInWord();
+        }
+    }
 
-	}
+    #endregion
 
-	public void CheckIfWin ()
-	{
-		for(int i = 0; i < wordToShow.Length; i++ )
-		{
-			if(wordToShow.Substring(i,1)=="_")
-			return;
-		}
-		Debug.Log("Player Win");
-	}
+    #region Class Functions
 
-	public void SetLockState(bool lockState)
-	{
-		myInputField.interactable = lockState;
-		isActiveInteractable = lockState;
-		myButton.interactable = lockState;
-	}
+    public void SetSpaceNewWord(string word)
+    {
+        for (int i = 0; i < word.Length; i++)
+        {
+            wordToShow += "_";
 
-	public void SetWordOfGame(string word)
-	{
-		currentWord = word;
-	}
+        }
 
+        textWordToShow.text = wordToShow;
+    }
 
-	public void AdActionPresButton(Action newAction)
-	{	
-		if(OnButtonDown==null)
-			OnButtonDown += newAction;
-	}
-	
+    public void CheckCharInWord()
+    {
+        if (OnButtonDown != null)
+            OnButtonDown();
 
+        bool tempBool = false;
 
+        for (int i = 0; i < currentWord.Length; i++)
+        {
+            if (currentWord.Substring(i, 1) == myInputField.textComponent.text)
+            {
+                tempBool = true;
+                ChangeChar(i, myInputField.textComponent.text);
+            }
+
+        }
+
+        if (!tempBool)
+        {
+            numOfTrys--;
+
+            if (numOfTrys <= 0)
+            {
+                Debug.Log("Player Lose");
+            }
+        }
+
+    }
+
+    public void CheckWin()
+    {
+        for (int i = 0; i < wordToShow.Length; i++)
+        {
+            if (wordToShow.Substring(i, 1) == "_")
+                return;
+        }
+
+        Debug.Log("Player Win");
+    }
+
+    public void ChangeChar(int targetIndex, string charToChange)
+    {
+        string tempString = "";
+
+        for (int i = 0; i < currentWord.Length; i++)
+        {
+            if (i != targetIndex)
+            {
+                tempString += wordToShow.Substring(i, 1);
+            }
+            else
+            {
+                tempString += charToChange;
+            }
+        }
+
+        wordToShow = tempString;
+        textWordToShow.text = tempString;
+        CheckWin();
+    }
+
+    public void SetLockState(bool lockState)
+    {
+        myInputField.interactable = lockState;
+        isActiveInteractable = lockState;
+        myButton.interactable = lockState;
+    }
+
+    public void SetWordOfGame(string word)
+    {
+        currentWord = word;
+    }
+
+    public void AdActionPresButton(Action newAction)
+    {
+        if (OnButtonDown == null)
+            OnButtonDown += newAction;
+    }
+
+    #endregion
 }
