@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 
-public class InputManger : MonoBehaviour {
+public class _Player : MonoBehaviour {
 
     #region Properties
 

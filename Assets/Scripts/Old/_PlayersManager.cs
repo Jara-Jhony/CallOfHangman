@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayersManager : MonoBehaviour {
+public class _PlayersManager : MonoBehaviour {
 
     #region Properties
 
@@ -37,13 +37,8 @@ public class PlayersManager : MonoBehaviour {
 
     private void Start()
     {
-        playersMatchs[0].GetComponent<InputManger>().AdActionPresButton(OnEnterChar);
-        playersMatchs[1].GetComponent<InputManger>().AdActionPresButton(OnEnterChar);
-
-        //Subscribing to the button functions
-        ButtonManager.onSingleplayer += SetupSingleplayer;
-        ButtonManager.onLocalMultiplayer += SetupLocalMultiplayer;
-        ButtonManager.onOnlineMultiplayer += SetupOnlineMultiplayer;
+        playersMatchs[0].GetComponent<_Player>().AdActionPresButton(OnEnterChar);
+        playersMatchs[1].GetComponent<_Player>().AdActionPresButton(OnEnterChar);
     }
 
     #endregion
@@ -53,8 +48,9 @@ public class PlayersManager : MonoBehaviour {
     public void SetupSingleplayer()
     {
         playerModeMenu.SetActive(false);
+
         numOfTurns = 1;
-        playersMatchs[0].GetComponent<InputManger>().SetWordOfGame(wordsForSinglePlayer[Random.Range(0, wordsForSinglePlayer.Length)]);
+        playersMatchs[0].GetComponent<_Player>().SetWordOfGame(wordsForSinglePlayer[Random.Range(0, wordsForSinglePlayer.Length)]);
         ActivateMatches();
     }
 
@@ -84,19 +80,19 @@ public class PlayersManager : MonoBehaviour {
         if (!isFirstPlayersSelected)
         {
             isFirstPlayersSelected = true;
-            playersMatchs[0].GetComponent<InputManger>().SetWordOfGame(myInputField.textComponent.text);
+            playersMatchs[0].GetComponent<_Player>().SetWordOfGame(myInputField.textComponent.text);
             myInputField.textComponent.text = "";
             textOfWordSelection.text = "Player 1 close your eyes, Player 2 select a word.";
         }
         else
         {
-            playersMatchs[1].GetComponent<InputManger>().SetWordOfGame(myInputField.textComponent.text);
+            playersMatchs[1].GetComponent<_Player>().SetWordOfGame(myInputField.textComponent.text);
             myInputField.textComponent.text = "";
             textOfWordSelection.text = "Player 2 close your eyes, Player 1 select a word.";
             wordSelectionMenu.SetActive(false);
 
-            playersMatchs[0].GetComponent<InputManger>().SetLockState(true);
-            playersMatchs[1].GetComponent<InputManger>().SetLockState(false);
+            playersMatchs[0].GetComponent<_Player>().SetLockState(true);
+            playersMatchs[1].GetComponent<_Player>().SetLockState(false);
 
             ActivateMatches();
         }
@@ -131,13 +127,13 @@ public class PlayersManager : MonoBehaviour {
         switch (currentTurn)
         {
             case 0:
-                playersMatchs[0].GetComponent<InputManger>().SetLockState(true);
-                playersMatchs[1].GetComponent<InputManger>().SetLockState(false);
+                playersMatchs[0].GetComponent<_Player>().SetLockState(true);
+                playersMatchs[1].GetComponent<_Player>().SetLockState(false);
                 break;
 
             case 1:
-                playersMatchs[1].GetComponent<InputManger>().SetLockState(true);
-                playersMatchs[0].GetComponent<InputManger>().SetLockState(false);
+                playersMatchs[1].GetComponent<_Player>().SetLockState(true);
+                playersMatchs[0].GetComponent<_Player>().SetLockState(false);
                 break;
 
             default:
