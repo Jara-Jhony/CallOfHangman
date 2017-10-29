@@ -52,16 +52,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   words:
-  - house
-  - hangman
-  - wave
-  - bikini
-  - gossip
-  - crypt
-  - soldier
-  - nightclub
-  - subway
-  - buffalo
+  - HOUSE
+  - HANGMAN
+  - WAVE
+  - BIKINI
+  - GOSSIP
+  - CRYPT
+  - SOLDIER
+  - NIGHTCLUB
+  - SUBWAY
+  - BUFFALO
   behaviourDistribution:
     serializedVersion: 2
     m_Curve:

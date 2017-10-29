@@ -93,10 +93,7 @@ public class Player : MonoBehaviour {
 
         for (int i = 0; i < wordCharsArray.Length; i++)
         {
-            char upperInputChar = char.ToUpper(inputChar);
-            char lowerInputChar = char.ToLower(inputChar);
-
-            if (upperInputChar == wordCharsArray[i] || lowerInputChar == wordCharsArray[i])
+            if (inputChar == wordCharsArray[i])
                 charsInWord.Add(i, wordCharsArray[i]);
         }
 

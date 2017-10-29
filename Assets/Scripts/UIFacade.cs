@@ -63,7 +63,16 @@ public class UIFacade : MonoBehaviour {
     private void Start()
     {
         wordInputField.characterLimit = 10;
+        wordInputField.onValidateInput += delegate (string input, int charIndex, char addedChar)
+        {
+            return ValidateChar(addedChar);
+        };
+
         letterInputField.characterLimit = 1;
+        letterInputField.onValidateInput += delegate (string input, int charIndex, char addedChar)
+        {
+            return ValidateChar(addedChar);
+        };
 
         //Subscribing to the input field events
         Observer.Singleton.onWordInputFieldEnter += ClearInputFields;
@@ -119,14 +128,32 @@ public class UIFacade : MonoBehaviour {
         currentInputFieldText = value;
     }
 
+    public void OnWordInputFieldValueChanged(string value)
+    {
+        currentInputFieldText = value.ToUpper();
+    }
+
     public void OnLetterInputFieldEndEdit(string value)
     {
         currentInputFieldText = value;
+    }
+
+    public void OnLetterInputFieldValueChanged(string value)
+    {
+        currentInputFieldText = value.ToUpper();
     }
 
     public void ClearInputFields()
     {
         wordInputField.text = "";
         letterInputField.text = "";
+    }
+
+    private char ValidateChar(char charToValidate)
+    {
+        if (!char.IsLetter(charToValidate) && !char.IsWhiteSpace(charToValidate))
+            charToValidate = ' ';
+
+        return char.ToUpper(charToValidate);
     }
 }
