@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class GameManager : MonoBehaviour
+public class GameManager : NetworkBehaviour
 {
     [SerializeField]
     private Player playerPrefab;
+
     [SerializeField]
     private PlayerAI playerAIPrefab;
 
@@ -97,6 +99,41 @@ public class GameManager : MonoBehaviour
         UIFacade.Singleton.SetActiveOnlineMultiplayer(true);
     }
 
+    public void SetHostPlayerOnline(GameObject otherPlayer)
+    { 
+
+       
+
+        if (players == null)
+            players = new Player[2];
+
+        players[0] = otherPlayer.GetComponent<Player>();
+        players[0].SetIndex(0);
+
+        if(players[0]==null)
+            Debug.Log("is null");
+        else
+            Debug.Log("isnt null");
+    }
+
+    public void SetPlayerTwoClient(GameObject otherPlayer)
+    {
+   
+        players[1] = otherPlayer.GetComponent<Player>();
+        players[1].SetIndex(1); 
+        players[1].gameObject.SetActive(false);
+
+        gameMode = 2;
+
+        UIFacade.Singleton.SetActiveOnlineMultiplayer(false);
+        UIFacade.Singleton.SetActiveLocalMultiplayer(true);
+
+        if(players[0]==null)
+            Debug.Log("is null");
+        else
+            Debug.Log("isnt null");
+    }
+
     private void CreatePlayers()
     {
         if (players == null)
@@ -129,6 +166,9 @@ public class GameManager : MonoBehaviour
     private void SetPlayerWord()
     {
         players[playerInTurn].SetWord(UIFacade.Singleton.currentInputFieldText);
+
+        if(UIFacade.Singleton!=null)
+        Debug.Log("UI READY");
 
         if (turn == 0)
         {

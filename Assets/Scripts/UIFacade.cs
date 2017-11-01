@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 
-public class UIFacade : MonoBehaviour {
+public class UIFacade : NetworkBehaviour {
 
     [Header("Menus")]
 
@@ -42,6 +43,8 @@ public class UIFacade : MonoBehaviour {
     public Text localMultiplayerInfo;
     public Text playerOneErrors;
     public Text playerTwoErrors;
+
+    public GameObject onlineWaitingScreen;
 
     [HideInInspector]
     public string currentInputFieldText;
@@ -123,6 +126,11 @@ public class UIFacade : MonoBehaviour {
         onlineMultiplayerScreens[screen].SetActive(state);
     }
 
+    public void SetActiveOnlineWaitingScreen(bool state)
+    {
+        onlineWaitingScreen.SetActive(state);
+    }
+
     public void OnWordInputFieldEndEdit(string value)
     {
         currentInputFieldText = value;
@@ -145,8 +153,8 @@ public class UIFacade : MonoBehaviour {
 
     public void ClearInputFields()
     {
-        wordInputField.text = "";
-        letterInputField.text = "";
+       /* wordInputField.text = "";
+        letterInputField.text = "";*/
     }
 
     private char ValidateChar(char charToValidate)
