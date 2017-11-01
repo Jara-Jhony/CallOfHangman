@@ -2106,11 +2106,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 93127df266a511746baacef5e8e25a70, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &421758332 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1485972270238938, guid: 1140499b2a369564ba19ffd671eb33a4,
-    type: 2}
-  m_PrefabInternal: {fileID: 1865739337}
 --- !u!1 &430586055
 GameObject:
   m_ObjectHideFlags: 0
@@ -2768,6 +2763,7 @@ MonoBehaviour:
   players:
   - {fileID: 0}
   - {fileID: 0}
+  thingsToCreat: []
   onlineGameManagerPrefab: {fileID: 0}
   myMultiplayerSetUp: {fileID: 0}
 --- !u!4 &723030278
@@ -6214,13 +6210,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myNetworkManager: {fileID: 723030277}
-  offlineGameManager: {fileID: 421758332}
-  onlineGameManagerPrefab: {fileID: 1008564274296860, guid: 0490f878f742f7a4c9bb24ac2537221e,
-    type: 2}
-  thigsToDestroy:
-  - {fileID: 130203554}
-  - {fileID: 41645253}
-  - {fileID: 421758332}
 --- !u!4 &1786936267
 Transform:
   m_ObjectHideFlags: 0

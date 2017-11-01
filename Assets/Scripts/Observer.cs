@@ -2,8 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class Observer : MonoBehaviour {
+public class Observer : NetworkBehaviour {
 
     //Actions
     public Action onSingleplayer;

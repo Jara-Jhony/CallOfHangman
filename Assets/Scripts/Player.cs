@@ -1,18 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
+using System;
 
-public class Player : MonoBehaviour {
+public class Player : NetworkBehaviour {
+
 
     public int index
     {
         get; protected set;
     }
 
-    public string word
-    {
-        get; protected set;
-    }
+    [SyncVar(hook = "SetWord")]
+    public string word;
+    
 
     public int sucessCount
     {
@@ -39,6 +41,11 @@ public class Player : MonoBehaviour {
         {
             wordCharsArray[i] = value;
         }
+    }
+
+    private void Start()
+    {   
+    
     }
 
     public void SetIndex(int index)
@@ -153,4 +160,6 @@ public class Player : MonoBehaviour {
             }
         }
     }
+
+
 }

@@ -9,6 +9,8 @@ public class CustomNetworkManager : NetworkManager {
 
 	public GameObject[] players = new GameObject[2];
 
+	public GameObject[] thingsToCreat;
+
 	public GameObject onlineGameManagerPrefab;
 
 	public MultiplayerSetUp myMultiplayerSetUp;
@@ -27,12 +29,19 @@ public class CustomNetworkManager : NetworkManager {
 
 		if(players[0]==null)
 		{
+			Debug.Log(GameManager.Singleton);
 			players[0] = (GameObject)player;
 			GameManager.Singleton.SetHostPlayerOnline(players[0]);
+
 		}else
 		{
 			players[1] = (GameObject)player;
 			GameManager.Singleton.SetPlayerTwoClient(players[1]);
+		}
+
+		if(numPlayers==2)
+		{
+			
 		}
 
 	}
