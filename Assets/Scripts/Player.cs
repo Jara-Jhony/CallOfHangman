@@ -72,16 +72,18 @@ public class Player : MonoBehaviour {
 
         wordCharsArray = word.ToCharArray();
 
-        switch (index)
+        switch (GameManager.Singleton.gameMode)
         {
-            case 0:
-                for (int i = UIFacade.Singleton.playerOneEmptyTexts.Length - 1; i > wordCharsArray.Length - 1; i--)
-                    UIFacade.Singleton.playerOneEmptyTexts[i].gameObject.SetActive(false);
+            case 1:
+                SetWordCaseSingleplayer();
                 break;
 
-            case 1:
-                for (int i = UIFacade.Singleton.playerTwoEmptyTexts.Length - 1; i > wordCharsArray.Length - 1; i--)
-                    UIFacade.Singleton.playerTwoEmptyTexts[i].gameObject.SetActive(false);
+            case 2:
+                SetWordCaseLocalMultiplayer();
+                break;
+
+            case 3:
+                SetWordOnlineMultiplayer();
                 break;
 
             default:
@@ -119,24 +121,108 @@ public class Player : MonoBehaviour {
         errorsCount++;
     }
 
+    private void SetWordCaseSingleplayer()
+    {
+        switch (index)
+        {
+            case 0:
+                for (int i = UIFacade.Singleton.singleplayer.playerOneEmptyTexts.Length - 1; i > wordCharsArray.Length - 1; i--)
+                    UIFacade.Singleton.singleplayer.playerOneEmptyTexts[i].gameObject.SetActive(false);
+                break;
+
+            case 1:
+                for (int i = UIFacade.Singleton.singleplayer.playerTwoEmptyTexts.Length - 1; i > wordCharsArray.Length - 1; i--)
+                    UIFacade.Singleton.singleplayer.playerTwoEmptyTexts[i].gameObject.SetActive(false);
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    private void SetWordCaseLocalMultiplayer()
+    {
+        switch (index)
+        {
+            case 0:
+                for (int i = UIFacade.Singleton.localMultiplayer.playerOneEmptyTexts.Length - 1; i > wordCharsArray.Length - 1; i--)
+                    UIFacade.Singleton.localMultiplayer.playerOneEmptyTexts[i].gameObject.SetActive(false);
+                break;
+
+            case 1:
+                for (int i = UIFacade.Singleton.localMultiplayer.playerTwoEmptyTexts.Length - 1; i > wordCharsArray.Length - 1; i--)
+                    UIFacade.Singleton.localMultiplayer.playerTwoEmptyTexts[i].gameObject.SetActive(false);
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    private void SetWordOnlineMultiplayer()
+    {
+        switch (index)
+        {
+            case 0:
+                for (int i = UIFacade.Singleton.onlineMultiplayer.playerOneEmptyTexts.Length - 1; i > wordCharsArray.Length - 1; i--)
+                    UIFacade.Singleton.onlineMultiplayer.playerOneEmptyTexts[i].gameObject.SetActive(false);
+                break;
+
+            case 1:
+                for (int i = UIFacade.Singleton.onlineMultiplayer.playerTwoEmptyTexts.Length - 1; i > wordCharsArray.Length - 1; i--)
+                    UIFacade.Singleton.onlineMultiplayer.playerTwoEmptyTexts[i].gameObject.SetActive(false);
+                break;
+
+            default:
+                break;
+        }
+    }
+
     private void Turn()
     {
         gameObject.SetActive(true);
 
         if (GameManager.Singleton.turn > 1)
         {
-            switch (index)
+            if (index == 0)
             {
-                case 0:
-                    UIFacade.Singleton.playersWords[1].SetActive(true);
-                    break;
+                switch (GameManager.Singleton.gameMode)
+                {
+                    case 1:
+                        UIFacade.Singleton.singleplayer.playersWordsObjects[1].SetActive(true);
+                        break;
 
-                case 1:
-                    UIFacade.Singleton.playersWords[0].SetActive(true);
-                    break;
+                    case 2:
+                        UIFacade.Singleton.localMultiplayer.playersWordsObjects[1].SetActive(true);
+                        break;
 
-                default:
-                    break;
+                    case 3:
+                        UIFacade.Singleton.onlineMultiplayer.playersWordsObjects[1].SetActive(true);
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+            else
+            {
+                switch (GameManager.Singleton.gameMode)
+                {
+                    case 1:
+                        UIFacade.Singleton.singleplayer.playersWordsObjects[0].SetActive(true);
+                        break;
+
+                    case 2:
+                        UIFacade.Singleton.localMultiplayer.playersWordsObjects[0].SetActive(true);
+                        break;
+
+                    case 3:
+                        UIFacade.Singleton.onlineMultiplayer.playersWordsObjects[0].SetActive(true);
+                        break;
+
+                    default:
+                        break;
+                }
             }
         }
     }
@@ -147,18 +233,39 @@ public class Player : MonoBehaviour {
 
         if (GameManager.Singleton.turn > 1)
         {
-            switch (index)
+            if (index == 0)
             {
-                case 0:
-                    UIFacade.Singleton.playersWords[1].SetActive(false);
-                    break;
+                switch (GameManager.Singleton.gameMode)
+                {
+                    case 1:
+                        UIFacade.Singleton.singleplayer.playersWordsObjects[1].SetActive(false);
+                        break;
 
-                case 1:
-                    UIFacade.Singleton.playersWords[0].SetActive(false);
-                    break;
+                    case 2:
+                        UIFacade.Singleton.localMultiplayer.playersWordsObjects[1].SetActive(false);
+                        break;
 
-                default:
-                    break;
+                    case 3:
+                        UIFacade.Singleton.onlineMultiplayer.playersWordsObjects[1].SetActive(false);
+                        break;
+                }
+            }
+            else
+            {
+                switch (GameManager.Singleton.gameMode)
+                {
+                    case 1:
+                        UIFacade.Singleton.singleplayer.playersWordsObjects[0].SetActive(false);
+                        break;
+
+                    case 2:
+                        UIFacade.Singleton.localMultiplayer.playersWordsObjects[0].SetActive(false);
+                        break;
+
+                    case 3:
+                        UIFacade.Singleton.onlineMultiplayer.playersWordsObjects[0].SetActive(false);
+                        break;
+                }
             }
         }
     }

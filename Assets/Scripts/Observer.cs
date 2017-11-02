@@ -12,8 +12,15 @@ public class Observer : MonoBehaviour {
     public Action onPlayerOneEndsTurn;
     public Action onPlayerTwoEndsTurn;
 
-    public Action onWordInputFieldEnter;
-    public Action onLetterInputFieldEnter;
+    //Input field Actions for singleplayer
+    public Action onWordInputFieldEnterSingleplayer;
+    public Action onLetterInputFieldEnterSingleplayer;
+    //Input field Actions for local multiplayer
+    public Action onWordInputFieldEnterLocalMultiplayer;
+    public Action onLetterInputFieldEnterLocalMultiplayer;
+    //Input field Actions for online multiplayer
+    public Action onWordInputFieldEnterOnlineMultiplayer;
+    public Action onLetterInputFieldEnterOnlineMultiplayer;
 
     //Singleton!
     public static Observer Singleton
@@ -77,15 +84,39 @@ public class Observer : MonoBehaviour {
             onPlayerTwoEndsTurn();
     }
 
-    public void WordInputFieldEnter()
+    public void WordInputFieldEnterSingleplayer()
     {
-        if (onWordInputFieldEnter != null)
-            onWordInputFieldEnter();
+        if (onWordInputFieldEnterLocalMultiplayer != null)
+            onWordInputFieldEnterLocalMultiplayer();
     }
 
-    public void LetterInputFieldEnter()
+    public void LetterInputFieldEnterSingleplayer()
     {
-        if (onLetterInputFieldEnter != null)
-            onLetterInputFieldEnter();
+        if (onLetterInputFieldEnterLocalMultiplayer != null)
+            onLetterInputFieldEnterLocalMultiplayer();
+    }
+
+    public void WordInputFieldEnterLocalMultiplayer()
+    {
+        if (onWordInputFieldEnterLocalMultiplayer != null)
+            onWordInputFieldEnterLocalMultiplayer();
+    }
+
+    public void LetterInputFieldEnterLocalMultiplayer()
+    {
+        if (onLetterInputFieldEnterLocalMultiplayer != null)
+            onLetterInputFieldEnterLocalMultiplayer();
+    }
+
+    public void WordInputFieldEnterOnlineMultiplayer()
+    {
+        if (onWordInputFieldEnterLocalMultiplayer != null)
+            onWordInputFieldEnterLocalMultiplayer();
+    }
+
+    public void LetterInputFieldEnterOnlineMultiplayer()
+    {
+        if (onLetterInputFieldEnterLocalMultiplayer != null)
+            onLetterInputFieldEnterLocalMultiplayer();
     }
 }
