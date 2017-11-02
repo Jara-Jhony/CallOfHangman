@@ -31,7 +31,7 @@ public class CustomNetworkManager : NetworkManager {
 		{
 			Debug.Log(GameManager.Singleton);
 			players[0] = (GameObject)player;
-			GameManager.Singleton.SetHostPlayerOnline(players[0]);
+			GameManager.Singleton.SetPlayerOneHost(players[0]);
 
 		}else
 		{

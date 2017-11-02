@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAI : Player
-{
+public class PlayerAI : Player {
+
     [SerializeField]
     private string[] words;
     [SerializeField]
@@ -29,13 +29,17 @@ public class PlayerAI : Player
         behaviourFactor = playableTurn + Random.Range(-behaviourGap, behaviourGap) * behaviourFactor;
 
         if (behaviourFactor >= -behaviourGap && behaviourFactor <= behaviourGap)
+        {
             PlayVocal();
+        }
         else if (behaviourFactor >= 0 && behaviourFactor <= 2 * behaviourGap)
+        {
             PlayCommonConsonant();
+        }
         else if (behaviourFactor >= behaviourGap && behaviourFactor <= 3 * behaviourGap)
+        {
             PlayUnusualConsonant();
-        else
-            PlaySign();
+        }
     }
 
     public void PlayVocal()
@@ -49,11 +53,6 @@ public class PlayerAI : Player
     }
 
     public void PlayUnusualConsonant()
-    {
-
-    }
-
-    public void PlaySign()
     {
 
     }

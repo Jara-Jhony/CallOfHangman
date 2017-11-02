@@ -1,34 +1,32 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
-using System;
 
-public class Player : NetworkBehaviour {
-
+public class Player : MonoBehaviour {
 
     public int index
     {
         get; protected set;
     }
 
-    [SyncVar(hook = "SetWord")]
-    public string word;
-    
+    public string word
+    {
+        get; protected set;
+    }
 
     public int sucessCount
     {
-        get; private set;
+        get; protected set;
     }
 
     public int errorsCount
     {
-        get; private set;
+        get; protected set;
     }
 
     public char[] wordCharsArray
     {
-        get; private set;
+        get; protected set;
     }
     //Word chars indexer
     public char this[int i]
@@ -43,10 +41,7 @@ public class Player : NetworkBehaviour {
         }
     }
 
-    private void Start()
-    {   
-    
-    }
+    public List<char> playedChars = new List<char>();
 
     public void SetIndex(int index)
     {
@@ -58,10 +53,12 @@ public class Player : NetworkBehaviour {
                 Observer.Singleton.onPlayerTwoEndsTurn += Turn;
                 Observer.Singleton.onPlayerOneEndsTurn += EndTurn;
                 break;
+
             case 1:
                 Observer.Singleton.onPlayerOneEndsTurn += Turn;
                 Observer.Singleton.onPlayerTwoEndsTurn += EndTurn;
                 break;
+
             default:
                 return;
         }
@@ -92,6 +89,11 @@ public class Player : NetworkBehaviour {
         }
 
         Debug.Log(string.Format("Player {0} word: {1}", index, word));
+    }
+
+    public void SetLetter(char letter)
+    {
+        //TODO.
     }
 
     public Dictionary<int, char> CheckForCharsInWord(char inputChar)
@@ -160,6 +162,4 @@ public class Player : NetworkBehaviour {
             }
         }
     }
-
-
 }

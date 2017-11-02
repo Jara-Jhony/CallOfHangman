@@ -1,10 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
-public class GameManager : NetworkBehaviour
-{
+public class GameManager : MonoBehaviour {
+
     [SerializeField]
     private Player playerPrefab;
 
@@ -66,9 +65,11 @@ public class GameManager : NetworkBehaviour
         //Subscribing to the word input field events
         Observer.Singleton.onWordInputFieldEnter += SetPlayerWord;
         Observer.Singleton.onWordInputFieldEnter += NextTurn;
+        Observer.Singleton.onWordInputFieldEnter += UIFacade.Singleton.ClearInputFields;
         //Subscribing to the letter input field events
         Observer.Singleton.onLetterInputFieldEnter += CheckForCharOnRivalPlayerWord;
         Observer.Singleton.onLetterInputFieldEnter += NextTurn;
+        Observer.Singleton.onLetterInputFieldEnter += UIFacade.Singleton.ClearInputFields;
     }
 
     public void SetupSingleplayer()
@@ -99,28 +100,24 @@ public class GameManager : NetworkBehaviour
         UIFacade.Singleton.SetActiveOnlineMultiplayer(true);
     }
 
-    public void SetHostPlayerOnline(GameObject otherPlayer)
-    { 
-
-       
-
+    public void SetPlayerOneHost(GameObject otherPlayer)
+    {
         if (players == null)
             players = new Player[2];
 
         players[0] = otherPlayer.GetComponent<Player>();
         players[0].SetIndex(0);
 
-        if(players[0]==null)
-            Debug.Log("is null");
+        if (players[0] == null)
+            Debug.Log("Is null");
         else
-            Debug.Log("isnt null");
+            Debug.Log("Isn't null");
     }
 
     public void SetPlayerTwoClient(GameObject otherPlayer)
     {
-   
         players[1] = otherPlayer.GetComponent<Player>();
-        players[1].SetIndex(1); 
+        players[1].SetIndex(1);
         players[1].gameObject.SetActive(false);
 
         gameMode = 2;
@@ -128,10 +125,27 @@ public class GameManager : NetworkBehaviour
         UIFacade.Singleton.SetActiveOnlineMultiplayer(false);
         UIFacade.Singleton.SetActiveLocalMultiplayer(true);
 
-        if(players[0]==null)
-            Debug.Log("is null");
+        if (players[0] == null)
+            Debug.Log("Is null");
         else
-            Debug.Log("isnt null");
+            Debug.Log("Isn't null");
+    }
+
+    private void SetPlayerWord()
+    {
+        players[playerInTurn].SetWord(UIFacade.Singleton.currentInputFieldText);
+
+        if (turn == 0)
+        {
+            UIFacade.Singleton.localMultiplayerInfo.text =
+                string.Format("Player 1 close your eyes, Player 2 select a word.");
+        }
+
+        if (turn == 1)
+        {
+            UIFacade.Singleton.SetActiveLocalMultiplayerScreen(0, false);
+            UIFacade.Singleton.SetActiveLocalMultiplayerScreen(1, true);
+        }
     }
 
     private void CreatePlayers()
@@ -163,66 +177,43 @@ public class GameManager : NetworkBehaviour
         players[1].gameObject.SetActive(false);
     }
 
-    private void SetPlayerWord()
-    {
-        players[playerInTurn].SetWord(UIFacade.Singleton.currentInputFieldText);
-
-        if(UIFacade.Singleton!=null)
-        Debug.Log("UI READY");
-
-        if (turn == 0)
-        {
-            UIFacade.Singleton.localMultiplayerInfo.text =
-                string.Format("Player 1 close your eyes, Player 2 select a word.");
-        }
-
-        if (turn == 1)
-        {
-            UIFacade.Singleton.SetActiveLocalMultiplayerScreen(0, false);
-            UIFacade.Singleton.SetActiveLocalMultiplayerScreen(1, true);
-        }
-    }
-
     private void CheckForCharOnRivalPlayerWord()
     {
-        int otherPlayerIndex = (playerInTurn == 0) ? 1 : 0;
+        int otherPlayer = (playerInTurn + 1) % 2;
 
+        //Played char taken from the input field
+        char playedChar = UIFacade.Singleton.currentInputFieldText[0];
+
+        //Data of correct chars
         Dictionary<int, char> correctChars = 
-            players[otherPlayerIndex].CheckForCharsInWord(UIFacade.Singleton.currentInputFieldText[0]);
+            players[otherPlayer].CheckForCharsInWord(playedChar);
+
+        //Is the char alredy played ???
+        if (players[playerInTurn].playedChars.Contains(playedChar))
+            return;
+        else
+            players[playerInTurn].playedChars.Add(playedChar);
 
         if (correctChars.Count == 0)
         {
             players[playerInTurn].IncreaseErrorsCount();
 
-            switch (playerInTurn)
-            {
-                case 0:
-                    UIFacade.Singleton.playerOneErrors.text = string.Format("Player 1 Errors: {0}/10", players[0].errorsCount);
-                    break;
-
-                case 1:
-                    UIFacade.Singleton.playerTwoErrors.text = string.Format("Player 2 Errors: {0}/10", players[1].errorsCount);
-                    break;
-
-                default:
-                    break;
-            }
+            UIFacade.Singleton.UpdateErrors(playerInTurn, players[playerInTurn].errorsCount);
 
             return;
         }
 
         if (players[playerInTurn].errorsCount >= 10)
-        {
-            Debug.Log("You Lose");
-        }
+            GameOver(otherPlayer);
 
-        for (int i = 0; i < players[otherPlayerIndex].wordCharsArray.Length; i++)
+        //Updating on the UI
+        for (int i = 0; i < players[otherPlayer].wordCharsArray.Length; i++)
         {
             if (correctChars.ContainsKey(i))
             {
                 players[playerInTurn].IncreaseSuccessCount();
 
-                switch (otherPlayerIndex)
+                switch (otherPlayer)
                 {
                     case 0:
                         UIFacade.Singleton.playerOneEmptyTexts[i].text = players[0].wordCharsArray[i].ToString();
@@ -239,9 +230,9 @@ public class GameManager : NetworkBehaviour
         }
 
         if (players[playerInTurn].sucessCount == 
-            players[otherPlayerIndex].wordCharsArray.Length - 1)
+            players[otherPlayer].wordCharsArray.Length)
         {
-            Debug.Log("You Win");
+            GameOver(playerInTurn);
         }
     }
 
@@ -255,5 +246,13 @@ public class GameManager : NetworkBehaviour
             Observer.Singleton.PlayerTwoEndsTurn();
 
         playerInTurn = turn % 2;
+    }
+
+    private void GameOver(int winner)
+    {
+        UIFacade.Singleton.SetWinner(winner);
+
+        UIFacade.Singleton.SetActiveLocalMultiplayerScreen(1, false);
+        UIFacade.Singleton.SetActiveLocalMultiplayerScreen(2, true);
     }
 }

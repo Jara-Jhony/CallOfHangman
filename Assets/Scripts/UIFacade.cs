@@ -1,9 +1,8 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
-public class UIFacade : NetworkBehaviour {
+public class UIFacade : MonoBehaviour {
 
     [Header("Menus")]
 
@@ -32,19 +31,26 @@ public class UIFacade : NetworkBehaviour {
     [SerializeField]
     private InputField letterInputField;
 
-    [Header("Player Text")] [Space(10f)]
+    [Header("Player Texts")] [Space(10f)]
 
     public GameObject[] playersWords;
     public Text[] playerOneEmptyTexts;
     public Text[] playerTwoEmptyTexts;
+
+    [Header("Win Screen")] [Space(10f)]
+
+    [SerializeField]
+    private Text playerWinner;
+    [SerializeField]
+    private Text[] playerWords;
+    [SerializeField]
+    private Text[] playerErrors;
 
     [Header("Others")] [Space(10f)]
 
     public Text localMultiplayerInfo;
     public Text playerOneErrors;
     public Text playerTwoErrors;
-
-    public GameObject onlineWaitingScreen;
 
     [HideInInspector]
     public string currentInputFieldText;
@@ -76,10 +82,11 @@ public class UIFacade : NetworkBehaviour {
         {
             return ValidateChar(addedChar);
         };
+    }
 
-        //Subscribing to the input field events
-        Observer.Singleton.onWordInputFieldEnter += ClearInputFields;
-        Observer.Singleton.onLetterInputFieldEnter += ClearInputFields;
+    public void Done()
+    {
+        SceneManager.LoadScene(0);
     }
 
     public void SetActiveMainMenu(bool state)
@@ -126,9 +133,37 @@ public class UIFacade : NetworkBehaviour {
         onlineMultiplayerScreens[screen].SetActive(state);
     }
 
-    public void SetActiveOnlineWaitingScreen(bool state)
+    public void SetWinner(int winner)
     {
-        onlineWaitingScreen.SetActive(state);
+        if (winner > 1 || winner < 0)
+            Debug.LogError("Winner out of index");
+
+        int losser = (winner + 1) % 2;
+
+        playerWinner.text = string.Format("PLAYER {0} WIN!", winner + 1);
+
+        playerWords[winner].text = GameManager.Singleton.players[winner].word;
+        playerWords[losser].text = GameManager.Singleton.players[losser].word;
+
+        playerErrors[0].text = playerOneErrors.text;
+        playerErrors[1].text = playerTwoErrors.text;
+    }
+
+    public void UpdateErrors(int player, int errors)
+    {
+        switch (player)
+        {
+            case 0:
+                playerOneErrors.text = string.Format("Player 1 Errors: {0}/10", errors);
+                break;
+
+            case 1:
+                playerTwoErrors.text = string.Format("Player 2 Errors: {0}/10", errors);
+                break;
+
+            default:
+                break;
+        }
     }
 
     public void OnWordInputFieldEndEdit(string value)
@@ -153,8 +188,8 @@ public class UIFacade : NetworkBehaviour {
 
     public void ClearInputFields()
     {
-       /* wordInputField.text = "";
-        letterInputField.text = "";*/
+        wordInputField.text = "";
+        letterInputField.text = "";
     }
 
     private char ValidateChar(char charToValidate)
