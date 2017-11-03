@@ -64,12 +64,12 @@ public class GameManager : MonoBehaviour {
     {
         gameMode = 1;
 
+        CreatePlayerWithAI();
+
         SuscribeToSingleplayerEvents();
 
         UIFacade.Singleton.SetActiveMainMenu(false);
         UIFacade.Singleton.singleplayer.SetActiveSingleplayer(true);
-
-        CreatePlayerWithAI();
     }
 
     public void SetupLocalMultiplayer()
@@ -96,49 +96,16 @@ public class GameManager : MonoBehaviour {
         CreatePlayers();
     }
 
-    private void SetPlayerWord()
+    public void NextTurn()
     {
-        switch (gameMode)
-        {
-            case 1:
-                players[playerInTurn].SetWord(UIFacade.Singleton.singleplayer.currentInputFieldText);
+        turn++;
 
-                if (turn == 0)
-                    UIFacade.Singleton.singleplayer.playerTurnInfo.text =
-                        string.Format("Player 1 close your eyes, Player 2 select a word.");
-                if (turn == 1)
-                {
-                    UIFacade.Singleton.singleplayer.SetActiveSingleplayerScreen(0, false);
-                    UIFacade.Singleton.singleplayer.SetActiveSingleplayerScreen(1, true);
-                }
-                break;
+        if (playerInTurn == 0)
+            Observer.Singleton.PlayerOneEndsTurn();
+        else
+            Observer.Singleton.PlayerTwoEndsTurn();
 
-            case 2:
-                players[playerInTurn].SetWord(UIFacade.Singleton.localMultiplayer.currentInputFieldText);
-
-                if (turn == 0)
-                    UIFacade.Singleton.localMultiplayer.playerTurnInfo.text =
-                        string.Format("Player 1 close your eyes, Player 2 select a word.");
-                if (turn == 1)
-                {
-                    UIFacade.Singleton.localMultiplayer.SetActiveLocalMultiplayerScreen(0, false);
-                    UIFacade.Singleton.localMultiplayer.SetActiveLocalMultiplayerScreen(1, true);
-                }
-                break;
-
-            case 3:
-                players[playerInTurn].SetWord(UIFacade.Singleton.onlineMultiplayer.currentInputFieldText);
-
-                if (turn == 0)
-                    UIFacade.Singleton.onlineMultiplayer.playerTurnInfo.text =
-                        string.Format("Player 1 close your eyes, Player 2 select a word.");
-                if (turn == 1)
-                {
-                    UIFacade.Singleton.onlineMultiplayer.SetActiveOnlineMultiplayerScreen(0, false);
-                    UIFacade.Singleton.onlineMultiplayer.SetActiveOnlineMultiplayerScreen(1, true);
-                }
-                break;
-        }
+        playerInTurn = turn % 2;
     }
 
     private void CreatePlayers()
@@ -170,216 +137,6 @@ public class GameManager : MonoBehaviour {
         players[1].gameObject.SetActive(false);
     }
 
-    private void CheckForCharOnRivalPlayerWord()
-    {
-        switch (gameMode)
-        {
-            case 1:
-                CheckForCharOnRivalPlayerWordCaseSingleplayer();
-                break;
-
-            case 2:
-                CheckForCharOnRivalPlayerWordCaseLocalMultiplayer();
-                break;
-
-            case 3:
-                CheckForCharOnRivalPlayerWordCaseOnlineMultiplayer();
-                break;
-
-            default:
-                return;
-        }
-    }
-
-    private void CheckForCharOnRivalPlayerWordCaseSingleplayer()
-    {
-        int otherPlayer = (playerInTurn + 1) % 2;
-
-        //Played char taken from the input field
-        char playedChar = UIFacade.Singleton.singleplayer.currentInputFieldText[0];
-
-        //Data of correct chars
-        Dictionary<int, char> correctChars =
-            players[otherPlayer].CheckForCharsInWord(playedChar);
-
-        //Is the char alredy played ???
-        if (players[playerInTurn].playedChars.Contains(playedChar))
-            return;
-        else
-            players[playerInTurn].playedChars.Add(playedChar);
-
-        if (correctChars.Count == 0)
-        {
-            players[playerInTurn].IncreaseErrorsCount();
-
-            UIFacade.Singleton.singleplayer.UpdateErrors(playerInTurn, players[playerInTurn].errorsCount);
-
-            return;
-        }
-
-        if (players[playerInTurn].errorsCount >= 10)
-            GameOver(otherPlayer);
-
-        //Updating on the UI
-        for (int i = 0; i < players[otherPlayer].wordCharsArray.Length; i++)
-        {
-            if (correctChars.ContainsKey(i))
-            {
-                players[playerInTurn].IncreaseSuccessCount();
-
-                switch (otherPlayer)
-                {
-                    case 0:
-                        UIFacade.Singleton.singleplayer.playerOneEmptyTexts[i].text = players[0].wordCharsArray[i].ToString();
-                        break;
-
-                    case 1:
-                        UIFacade.Singleton.singleplayer.playerTwoEmptyTexts[i].text = players[1].wordCharsArray[i].ToString();
-                        break;
-
-                    default:
-                        break;
-                }
-            }
-        }
-
-        if (players[playerInTurn].sucessCount ==
-            players[otherPlayer].wordCharsArray.Length)
-        {
-            GameOver(playerInTurn);
-        }
-    }
-
-    private void CheckForCharOnRivalPlayerWordCaseLocalMultiplayer()
-    {
-        int otherPlayer = (playerInTurn + 1) % 2;
-
-        //Played char taken from the input field
-        char playedChar = UIFacade.Singleton.localMultiplayer.currentInputFieldText[0];
-
-        //Data of correct chars
-        Dictionary<int, char> correctChars =
-            players[otherPlayer].CheckForCharsInWord(playedChar);
-
-        //Is the char alredy played ???
-        if (players[playerInTurn].playedChars.Contains(playedChar))
-            return;
-        else
-            players[playerInTurn].playedChars.Add(playedChar);
-
-        if (correctChars.Count == 0)
-        {
-            players[playerInTurn].IncreaseErrorsCount();
-
-            UIFacade.Singleton.localMultiplayer.UpdateErrors(playerInTurn, players[playerInTurn].errorsCount);
-
-            return;
-        }
-
-        if (players[playerInTurn].errorsCount >= 10)
-            GameOver(otherPlayer);
-
-        //Updating on the UI
-        for (int i = 0; i < players[otherPlayer].wordCharsArray.Length; i++)
-        {
-            if (correctChars.ContainsKey(i))
-            {
-                players[playerInTurn].IncreaseSuccessCount();
-
-                switch (otherPlayer)
-                {
-                    case 0:
-                        UIFacade.Singleton.localMultiplayer.playerOneEmptyTexts[i].text = players[0].wordCharsArray[i].ToString();
-                        break;
-
-                    case 1:
-                        UIFacade.Singleton.localMultiplayer.playerTwoEmptyTexts[i].text = players[1].wordCharsArray[i].ToString();
-                        break;
-
-                    default:
-                        break;
-                }
-            }
-        }
-
-        if (players[playerInTurn].sucessCount ==
-            players[otherPlayer].wordCharsArray.Length)
-        {
-            GameOver(playerInTurn);
-        }
-    }
-
-    private void CheckForCharOnRivalPlayerWordCaseOnlineMultiplayer()
-    {
-        int otherPlayer = (playerInTurn + 1) % 2;
-
-        //Played char taken from the input field
-        char playedChar = UIFacade.Singleton.onlineMultiplayer.currentInputFieldText[0];
-
-        //Data of correct chars
-        Dictionary<int, char> correctChars =
-            players[otherPlayer].CheckForCharsInWord(playedChar);
-
-        //Is the char alredy played ???
-        if (players[playerInTurn].playedChars.Contains(playedChar))
-            return;
-        else
-            players[playerInTurn].playedChars.Add(playedChar);
-
-        if (correctChars.Count == 0)
-        {
-            players[playerInTurn].IncreaseErrorsCount();
-
-            UIFacade.Singleton.onlineMultiplayer.UpdateErrors(playerInTurn, players[playerInTurn].errorsCount);
-
-            return;
-        }
-
-        if (players[playerInTurn].errorsCount >= 10)
-            GameOver(otherPlayer);
-
-        //Updating on the UI
-        for (int i = 0; i < players[otherPlayer].wordCharsArray.Length; i++)
-        {
-            if (correctChars.ContainsKey(i))
-            {
-                players[playerInTurn].IncreaseSuccessCount();
-
-                switch (otherPlayer)
-                {
-                    case 0:
-                        UIFacade.Singleton.onlineMultiplayer.playerOneEmptyTexts[i].text = players[0].wordCharsArray[i].ToString();
-                        break;
-
-                    case 1:
-                        UIFacade.Singleton.onlineMultiplayer.playerTwoEmptyTexts[i].text = players[1].wordCharsArray[i].ToString();
-                        break;
-
-                    default:
-                        break;
-                }
-            }
-        }
-
-        if (players[playerInTurn].sucessCount ==
-            players[otherPlayer].wordCharsArray.Length)
-        {
-            GameOver(playerInTurn);
-        }
-    }
-
-    private void NextTurn()
-    {
-        turn++;
-
-        if (playerInTurn == 0)
-            Observer.Singleton.PlayerOneEndsTurn();
-        else
-            Observer.Singleton.PlayerTwoEndsTurn();
-
-        playerInTurn = turn % 2;
-    }
-
     private void SuscribeToGameModes()
     {
         //Subscribing to the game modes
@@ -398,6 +155,14 @@ public class GameManager : MonoBehaviour {
         Observer.Singleton.onLetterInputFieldEnterSingleplayer += CheckForCharOnRivalPlayerWord;
         Observer.Singleton.onLetterInputFieldEnterSingleplayer += NextTurn;
         Observer.Singleton.onLetterInputFieldEnterSingleplayer += UIFacade.Singleton.singleplayer.ClearInputFields;
+
+        //AI!
+        PlayerAI playerAI = players[1].GetComponent<PlayerAI>();
+
+        //Subscribing to the word input field events
+        Observer.Singleton.onWordInputFieldEnterSingleplayer += playerAI.SelectWord;
+        //Subscribing to the letter input field events
+        Observer.Singleton.onLetterInputFieldEnterSingleplayer += playerAI.Play;
     }
 
     private void SuscribeToLocalMultiplayerEvents()
@@ -424,30 +189,258 @@ public class GameManager : MonoBehaviour {
         Observer.Singleton.onLetterInputFieldEnterOnlineMultiplayer += UIFacade.Singleton.onlineMultiplayer.ClearInputFields;
     }
 
-    private void GameOver(int winner)
+    //SET PLAYER WORD CASES!
+
+    public void SetPlayerWord()
     {
         switch (gameMode)
         {
             case 1:
-                UIFacade.Singleton.singleplayer.SetWinnerScreen(winner);
-                UIFacade.Singleton.singleplayer.SetActiveSingleplayerScreen(1, false);
-                UIFacade.Singleton.singleplayer.SetActiveSingleplayerScreen(2, true);
+                SetPlayerWordCaseSingleplayer();
                 break;
 
             case 2:
-                UIFacade.Singleton.localMultiplayer.SetWinnerScreen(winner);
-                UIFacade.Singleton.localMultiplayer.SetActiveLocalMultiplayerScreen(1, false);
-                UIFacade.Singleton.localMultiplayer.SetActiveLocalMultiplayerScreen(2, true);
+                SetPlayerWordCaseLocalMultiplayer();
                 break;
 
             case 3:
-                UIFacade.Singleton.onlineMultiplayer.SetWinnerScreen(winner);
-                UIFacade.Singleton.onlineMultiplayer.SetActiveOnlineMultiplayerScreen(1, false);
-                UIFacade.Singleton.onlineMultiplayer.SetActiveOnlineMultiplayerScreen(2, true);
+                SetPlayerWordCaseOnlineMultiplayer();
+                break;
+        }
+    }
+
+    private void SetPlayerWordCaseSingleplayer()
+    {
+        players[0].SetWord(UIFacade.Singleton.singleplayer.currentInputFieldText);
+
+        UIFacade.Singleton.singleplayer.SetActiveSingleplayerScreen(0, false);
+        UIFacade.Singleton.singleplayer.SetActiveSingleplayerScreen(1, true);
+    }
+
+    private void SetPlayerWordCaseLocalMultiplayer()
+    {
+        players[playerInTurn].SetWord(UIFacade.Singleton.localMultiplayer.currentInputFieldText);
+
+        if (turn == 0)
+            UIFacade.Singleton.localMultiplayer.playerTurnInfo.text =
+                string.Format("Player 1 close your eyes, Player 2 select a word.");
+        if (turn == 1)
+        {
+            UIFacade.Singleton.localMultiplayer.SetActiveLocalMultiplayerScreen(0, false);
+            UIFacade.Singleton.localMultiplayer.SetActiveLocalMultiplayerScreen(1, true);
+        }
+    }
+
+    private void SetPlayerWordCaseOnlineMultiplayer()
+    {
+        players[playerInTurn].SetWord(UIFacade.Singleton.onlineMultiplayer.currentInputFieldText);
+
+        if (turn == 0)
+            UIFacade.Singleton.onlineMultiplayer.playerTurnInfo.text =
+                string.Format("Player 1 close your eyes, Player 2 select a word.");
+        if (turn == 1)
+        {
+            UIFacade.Singleton.onlineMultiplayer.SetActiveOnlineMultiplayerScreen(0, false);
+            UIFacade.Singleton.onlineMultiplayer.SetActiveOnlineMultiplayerScreen(1, true);
+        }
+    }
+
+    //CHECK FOR CHAR ON RIVAL PLAYER WORD CASES!
+
+    public void CheckForCharOnRivalPlayerWord()
+    {
+        switch (gameMode)
+        {
+            case 1:
+                CheckForCharOnRivalPlayerWordCaseSingleplayer();
+                break;
+
+            case 2:
+                CheckForCharOnRivalPlayerWordCaseLocalMultiplayer();
+                break;
+
+            case 3:
+                CheckForCharOnRivalPlayerWordCaseOnlineMultiplayer();
+                break;
+
+            default:
+                return;
+        }
+    }
+
+    public void CheckForCharOnRivalPlayerWordAI(char letter)
+    {
+        char playedChar = letter;
+
+        //Is the char selected alredy played ???
+        if (players[playerInTurn].playedChars.Contains(playedChar))
+            return;
+        else
+            players[playerInTurn].playedChars.Add(playedChar);
+
+        int otherPlayer = (playerInTurn + 1) % 2;
+
+        Dictionary<int, char> correctChars = players[otherPlayer].CheckForCharsInWord(playedChar);
+
+        //Are not matched chars in the word ???
+        if (correctChars.Count == 0)
+            UIFacade.Singleton.singleplayer.UpdateErrors(playerInTurn);
+        else
+            UIFacade.Singleton.singleplayer.UpdateSuccess(playerInTurn, correctChars);
+
+        if (players[playerInTurn].errorsCount >= 10)
+        {
+            GameOver(otherPlayer);
+            return;
+        }
+
+        if (players[playerInTurn].sucessCount == players[otherPlayer].wordCharsArray.Length)
+        {
+            GameOver(playerInTurn);
+            return;
+        }
+    }
+
+    private void CheckForCharOnRivalPlayerWordCaseSingleplayer()
+    {
+        char playedChar = UIFacade.Singleton.singleplayer.currentInputFieldText[0];
+
+        //Is the char selected alredy played ???
+        if (players[playerInTurn].playedChars.Contains(playedChar))
+            return;
+        else
+            players[playerInTurn].playedChars.Add(playedChar);
+
+        int otherPlayer = (playerInTurn + 1) % 2;
+
+        Dictionary<int, char> correctChars = players[otherPlayer].CheckForCharsInWord(playedChar);
+
+        //Are not matched chars in the word ???
+        if (correctChars.Count == 0)
+            UIFacade.Singleton.singleplayer.UpdateErrors(playerInTurn);
+        else
+            UIFacade.Singleton.singleplayer.UpdateSuccess(playerInTurn, correctChars);
+
+        if (players[playerInTurn].errorsCount >= 10)
+        {
+            GameOver(otherPlayer);
+            return;
+        }
+
+        if (players[playerInTurn].sucessCount == players[otherPlayer].wordCharsArray.Length)
+        {
+            GameOver(playerInTurn);
+            return;
+        }
+    }
+
+    private void CheckForCharOnRivalPlayerWordCaseLocalMultiplayer()
+    {
+        char playedChar = UIFacade.Singleton.localMultiplayer.currentInputFieldText[0];
+
+        //Is the char selected alredy played ???
+        if (players[playerInTurn].playedChars.Contains(playedChar))
+            return;
+        else
+            players[playerInTurn].playedChars.Add(playedChar);
+
+        int otherPlayer = (playerInTurn + 1) % 2;
+
+        Dictionary<int, char> correctChars = players[otherPlayer].CheckForCharsInWord(playedChar);
+
+        //Are not matched chars in the word ???
+        if (correctChars.Count == 0)
+            UIFacade.Singleton.localMultiplayer.UpdateErrors(playerInTurn);
+        else
+            UIFacade.Singleton.localMultiplayer.UpdateSuccess(playerInTurn, correctChars);
+
+        if (players[playerInTurn].errorsCount >= 10)
+        {
+            GameOver(otherPlayer);
+            return;
+        }
+
+        if (players[playerInTurn].sucessCount == players[otherPlayer].wordCharsArray.Length)
+        {
+            GameOver(playerInTurn);
+            return;
+        }
+    }
+
+    private void CheckForCharOnRivalPlayerWordCaseOnlineMultiplayer()
+    {
+        char playedChar = UIFacade.Singleton.onlineMultiplayer.currentInputFieldText[0];
+
+        //Is the char selected alredy played ???
+        if (players[playerInTurn].playedChars.Contains(playedChar))
+            return;
+        else
+            players[playerInTurn].playedChars.Add(playedChar);
+
+        int otherPlayer = (playerInTurn + 1) % 2;
+
+        Dictionary<int, char> correctChars = players[otherPlayer].CheckForCharsInWord(playedChar);
+
+        //Are not matched chars in the word ???
+        if (correctChars.Count == 0)
+            UIFacade.Singleton.onlineMultiplayer.UpdateErrors(playerInTurn);
+        else
+            UIFacade.Singleton.onlineMultiplayer.UpdateSuccess(playerInTurn, correctChars);
+
+        if (players[playerInTurn].errorsCount >= 10)
+        {
+            GameOver(otherPlayer);
+            return;
+        }
+
+        if (players[playerInTurn].sucessCount == players[otherPlayer].wordCharsArray.Length)
+        {
+            GameOver(playerInTurn);
+            return;
+        }
+    }
+
+    //GAME OVER CASES!
+
+    public void GameOver(int winner)
+    {
+        switch (gameMode)
+        {
+            case 1:
+                GameOverCaseSingleplayer(winner);
+                break;
+
+            case 2:
+                GameOverCaseLocalMultiplayer(winner);
+                break;
+
+            case 3:
+                GameOverCaseOnlineMultiplayer(winner);
                 break;
 
             default:
                 break;
         }
+    }
+
+    private void GameOverCaseSingleplayer(int winner)
+    {
+        UIFacade.Singleton.singleplayer.SetWinnerScreen(winner);
+        UIFacade.Singleton.singleplayer.SetActiveSingleplayerScreen(1, false);
+        UIFacade.Singleton.singleplayer.SetActiveSingleplayerScreen(2, true);
+    }
+
+    private void GameOverCaseLocalMultiplayer(int winner)
+    {
+        UIFacade.Singleton.localMultiplayer.SetWinnerScreen(winner);
+        UIFacade.Singleton.localMultiplayer.SetActiveLocalMultiplayerScreen(1, false);
+        UIFacade.Singleton.localMultiplayer.SetActiveLocalMultiplayerScreen(2, true);
+    }
+
+    private void GameOverCaseOnlineMultiplayer(int winner)
+    {
+        UIFacade.Singleton.onlineMultiplayer.SetWinnerScreen(winner);
+        UIFacade.Singleton.onlineMultiplayer.SetActiveOnlineMultiplayerScreen(1, false);
+        UIFacade.Singleton.onlineMultiplayer.SetActiveOnlineMultiplayerScreen(2, true);
     }
 }

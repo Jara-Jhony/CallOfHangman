@@ -93,11 +93,6 @@ public class Player : MonoBehaviour {
         Debug.Log(string.Format("Player {0} word: {1}", index, word));
     }
 
-    public void SetLetter(char letter)
-    {
-        //TODO.
-    }
-
     public Dictionary<int, char> CheckForCharsInWord(char inputChar)
     {
         Dictionary<int, char> charsInWord = new Dictionary<int, char>();

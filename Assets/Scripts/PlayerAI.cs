@@ -4,29 +4,61 @@ using UnityEngine;
 
 public class PlayerAI : Player {
 
+    private char playableLetter = ' ';
+
     [SerializeField]
     private string[] words;
     [SerializeField]
     private AnimationCurve behaviourDistribution;
 
     //Char list
-    private List<char> vocals;
-    private List<char> commonConsonants;
-    private List<char> unusualConsonants;
+    private List<char> vocals = new List<char>();
+    private List<char> commonConsonants = new List<char>();
+    private List<char> unusualConsonants = new List<char>();
 
+    //Coroutine
+    private IEnumerator playCoroutine;
+
+    private int playableTurn;
     private float behaviourFactor;
     private float behaviourGap = 4.0f;
 
-    public void SelectWord()
+    private void Start()
     {
-        word = words[Random.Range(0, words.Length)];
+        AddVocals();
+        AddCommonConsonants();
+        AddUnusualConsonants();
     }
 
-    public void DoMove()
+    public void SelectWord()
     {
-        int playableTurn = (int)(GameManager.Singleton.turn * 0.5) - 1;
+        string selectedWord = words[Random.Range(0, words.Length)];
 
-        behaviourFactor = playableTurn + Random.Range(-behaviourGap, behaviourGap) * behaviourFactor;
+        SetWord(selectedWord);
+
+        GameManager.Singleton.NextTurn();
+    }
+
+    public void Play()
+    {
+        if (playCoroutine != null)
+            StopCoroutine(playCoroutine);
+
+        playCoroutine = PlayCoroutine();
+
+        StartCoroutine(playCoroutine);
+    }
+
+    private IEnumerator PlayCoroutine()
+    {
+        UIFacade.Singleton.singleplayer.SetActiveLetterSection(false);
+
+        yield return new WaitForSeconds(0.25f);
+
+        playableTurn = (int)((GameManager.Singleton.turn * 0.5) - 0.5f) + 1;
+
+        //Behaviour factor decides what play the AI
+        behaviourFactor = playableTurn + Random.Range(-behaviourGap, behaviourGap) * behaviourDistribution.Evaluate(Random.Range(0, 1));
 
         if (behaviourFactor >= -behaviourGap && behaviourFactor <= behaviourGap)
             PlayVocal();
@@ -34,20 +66,96 @@ public class PlayerAI : Player {
             PlayCommonConsonant();
         else if (behaviourFactor >= behaviourGap && behaviourFactor <= 3 * behaviourGap)
             PlayUnusualConsonant();
+
+        GameManager.Singleton.CheckForCharOnRivalPlayerWordAI(playableLetter);
+
+        yield return new WaitForSeconds(0.75f);
+
+        UIFacade.Singleton.singleplayer.SetActiveLetterSection(true);
+
+        yield return null;
+
+        GameManager.Singleton.NextTurn();
     }
 
-    public void PlayVocal()
+    private void PlayVocal()
     {
-        //TODO
+        int index = 0;
+
+        while (playedChars.Contains(playableLetter))
+        {
+            index = Random.Range(0, vocals.Count);
+
+            playableLetter = vocals[index];
+        }
+
+        Debug.Log(string.Format("AI Letter: {0}", playableLetter));
     }
 
-    public void PlayCommonConsonant()
+    private void PlayCommonConsonant()
     {
-        //TODO
+        int index = 0;
+
+        while (playedChars.Contains(playableLetter))
+        {
+            index = Random.Range(0, vocals.Count);
+
+            playableLetter = vocals[index];
+        }
+
+        Debug.Log(string.Format("AI Letter: {0}", playableLetter));
     }
 
-    public void PlayUnusualConsonant()
+    private void PlayUnusualConsonant()
     {
-        //TODO
+        int index = 0;
+
+        while (playedChars.Contains(playableLetter))
+        {
+            index = Random.Range(0, vocals.Count);
+
+            playableLetter = vocals[index];
+        }
+
+        Debug.Log(string.Format("AI Letter: {0}", playableLetter));
+    }
+
+    private void AddVocals()
+    {
+        vocals.Add('A');
+        vocals.Add('E');
+        vocals.Add('I');
+        vocals.Add('O');
+        vocals.Add('U');
+    }
+
+    private void AddCommonConsonants()
+    {
+        commonConsonants.Add(' ');
+        commonConsonants.Add('T');
+        commonConsonants.Add('N');
+        commonConsonants.Add('S');
+        commonConsonants.Add('H');
+        commonConsonants.Add('R');
+        commonConsonants.Add('D');
+        commonConsonants.Add('L');
+        commonConsonants.Add('C');
+        commonConsonants.Add('M');
+        commonConsonants.Add('W');
+    }
+
+    private void AddUnusualConsonants()
+    {
+        unusualConsonants.Add('F');
+        unusualConsonants.Add('G');
+        unusualConsonants.Add('Y');
+        unusualConsonants.Add('P');
+        unusualConsonants.Add('B');
+        unusualConsonants.Add('V');
+        unusualConsonants.Add('K');
+        unusualConsonants.Add('J');
+        unusualConsonants.Add('X');
+        unusualConsonants.Add('Q');
+        unusualConsonants.Add('Z');
     }
 }

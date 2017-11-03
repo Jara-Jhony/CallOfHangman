@@ -8,7 +8,6 @@ public class Observer : MonoBehaviour {
     public Action onLocalMultiplayer;
     public Action onOnlineMultiplayer;
     public Action onReadme;
-
     public Action onPlayerOneEndsTurn;
     public Action onPlayerTwoEndsTurn;
 
@@ -86,14 +85,14 @@ public class Observer : MonoBehaviour {
 
     public void WordInputFieldEnterSingleplayer()
     {
-        if (onWordInputFieldEnterLocalMultiplayer != null)
-            onWordInputFieldEnterLocalMultiplayer();
+        if (onWordInputFieldEnterSingleplayer != null)
+            onWordInputFieldEnterSingleplayer();
     }
 
     public void LetterInputFieldEnterSingleplayer()
     {
-        if (onLetterInputFieldEnterLocalMultiplayer != null)
-            onLetterInputFieldEnterLocalMultiplayer();
+        if (onLetterInputFieldEnterSingleplayer != null)
+            onLetterInputFieldEnterSingleplayer();
     }
 
     public void WordInputFieldEnterLocalMultiplayer()
@@ -110,13 +109,13 @@ public class Observer : MonoBehaviour {
 
     public void WordInputFieldEnterOnlineMultiplayer()
     {
-        if (onWordInputFieldEnterLocalMultiplayer != null)
-            onWordInputFieldEnterLocalMultiplayer();
+        if (onWordInputFieldEnterOnlineMultiplayer != null)
+            onWordInputFieldEnterOnlineMultiplayer();
     }
 
     public void LetterInputFieldEnterOnlineMultiplayer()
     {
-        if (onLetterInputFieldEnterLocalMultiplayer != null)
-            onLetterInputFieldEnterLocalMultiplayer();
+        if (onLetterInputFieldEnterOnlineMultiplayer != null)
+            onLetterInputFieldEnterOnlineMultiplayer();
     }
 }

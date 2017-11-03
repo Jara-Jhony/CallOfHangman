@@ -1,4 +1,8 @@
-﻿public class Singleplayer : UserInterface {
+﻿using UnityEngine.UI;
+
+public class Singleplayer : UserInterface {
+
+    public Button letterButton;
 
     public void SetActiveSingleplayer(bool state)
     {
@@ -11,5 +15,11 @@
             return;
 
         screens[screen].SetActive(state);
+    }
+
+    public void SetActiveLetterSection(bool state)
+    {
+        letterButton.interactable = state;
+        letterInputField.interactable = state;
     }
 }
