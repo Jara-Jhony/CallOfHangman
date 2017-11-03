@@ -13,9 +13,13 @@ public abstract class UserInterface : MonoBehaviour {
     public InputField wordInputField;
     public InputField letterInputField;
 
+    [Space(10f)] [Header("Word Screen")]
+
+    public Text playerTurnWordScreen;
+
     [Space(10f)] [Header("Game Screen")]
 
-    public Text playerTurnInfo;
+    public Text playerTurnGameScreen;
     public Text playerOneErrors;
     public Text playerTwoErrors;
 
@@ -30,6 +34,10 @@ public abstract class UserInterface : MonoBehaviour {
     public GameObject[] playersWordsObjects;
     public Text[] playerOneEmptyTexts;
     public Text[] playerTwoEmptyTexts;
+
+    [Space(10f)]
+
+    public Timer timer;
 
     [HideInInspector]
     public string currentInputFieldText;
@@ -50,6 +58,14 @@ public abstract class UserInterface : MonoBehaviour {
         {
             return ValidateChar(addedChar);
         };
+    }
+
+    public void Setup()
+    {
+        Observer.Singleton.onPlayerOneEndsTurn += SetTurnTextPlayerTwo;
+        Observer.Singleton.onPlayerTwoEndsTurn += SetTurnTextPlayerOne;
+
+        timer.StartWatch();
     }
 
     public virtual void SetWinnerScreen(int winner)
@@ -140,7 +156,17 @@ public abstract class UserInterface : MonoBehaviour {
         letterInputField.text = "";
     }
 
-    private char ValidateChar(char charToValidate)
+    protected void SetTurnTextPlayerOne()
+    {
+        playerTurnGameScreen.text = "Player 1 Turn";
+    }
+
+    protected void SetTurnTextPlayerTwo()
+    {
+        playerTurnGameScreen.text = "Player 2 Turn";
+    }
+
+    protected char ValidateChar(char charToValidate)
     {
         if (!char.IsLetter(charToValidate) && !char.IsWhiteSpace(charToValidate))
             charToValidate = ' ';

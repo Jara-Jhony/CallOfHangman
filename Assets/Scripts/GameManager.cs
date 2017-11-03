@@ -68,6 +68,7 @@ public class GameManager : MonoBehaviour {
 
         SuscribeToSingleplayerEvents();
 
+        UIFacade.Singleton.singleplayer.Setup();
         UIFacade.Singleton.SetActiveMainMenu(false);
         UIFacade.Singleton.singleplayer.SetActiveSingleplayer(true);
     }
@@ -76,24 +77,26 @@ public class GameManager : MonoBehaviour {
     {
         gameMode = 2;
 
+        CreatePlayers();
+
         SuscribeToLocalMultiplayerEvents();
 
+        UIFacade.Singleton.localMultiplayer.Setup();
         UIFacade.Singleton.SetActiveMainMenu(false);
         UIFacade.Singleton.localMultiplayer.SetActiveLocalMultiplayer(true);
-
-        CreatePlayers();
     }
 
     public void SetupOnlineMultiplayer()
     {
         gameMode = 3;
 
+        CreatePlayers();
+
         SuscribeToOnlineMultiplayerEvents();
 
+        UIFacade.Singleton.onlineMultiplayer.Setup();
         UIFacade.Singleton.SetActiveMainMenu(false);
         UIFacade.Singleton.onlineMultiplayer.SetActiveOnlineMultiplayer(true);
-
-        CreatePlayers();
     }
 
     public void NextTurn()
@@ -222,7 +225,7 @@ public class GameManager : MonoBehaviour {
         players[playerInTurn].SetWord(UIFacade.Singleton.localMultiplayer.currentInputFieldText);
 
         if (turn == 0)
-            UIFacade.Singleton.localMultiplayer.playerTurnInfo.text =
+            UIFacade.Singleton.localMultiplayer.playerTurnWordScreen.text =
                 string.Format("Player 1 close your eyes, Player 2 select a word.");
         if (turn == 1)
         {
@@ -236,7 +239,7 @@ public class GameManager : MonoBehaviour {
         players[playerInTurn].SetWord(UIFacade.Singleton.onlineMultiplayer.currentInputFieldText);
 
         if (turn == 0)
-            UIFacade.Singleton.onlineMultiplayer.playerTurnInfo.text =
+            UIFacade.Singleton.onlineMultiplayer.playerTurnWordScreen.text =
                 string.Format("Player 1 close your eyes, Player 2 select a word.");
         if (turn == 1)
         {
