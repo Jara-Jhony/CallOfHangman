@@ -21,7 +21,11 @@ public class PlayerAI : Player {
 
     private int playableTurn;
     private float behaviourFactor;
-    private float behaviourGap = 4.0f;
+    private float behaviourGap = 5f;
+
+    private float whileCount;
+
+    private bool allVocalsWasPlayed = false;
 
     private void Start()
     {
@@ -60,7 +64,7 @@ public class PlayerAI : Player {
         //Behaviour factor decides what play the AI
         behaviourFactor = playableTurn + Random.Range(-behaviourGap, behaviourGap) * behaviourDistribution.Evaluate(Random.Range(0, 1));
 
-        if (behaviourFactor >= -behaviourGap && behaviourFactor <= behaviourGap)
+        if (behaviourFactor >= -behaviourGap && behaviourFactor <= behaviourGap && !allVocalsWasPlayed)
             PlayVocal();
         else if (behaviourFactor >= 0 && behaviourFactor <= 2 * behaviourGap)
             PlayCommonConsonant();
@@ -87,7 +91,22 @@ public class PlayerAI : Player {
             index = Random.Range(0, vocals.Count);
 
             playableLetter = vocals[index];
+
+            whileCount++;
+
+            if (whileCount == vocals.Count)
+            {
+                PlayCommonConsonant();
+
+                allVocalsWasPlayed = true;
+
+                whileCount = 0;
+                
+                return;
+            }
         }
+
+        whileCount = 0;
 
         Debug.Log(string.Format("AI Letter: {0}", playableLetter));
     }
@@ -101,6 +120,8 @@ public class PlayerAI : Player {
             index = Random.Range(0, commonConsonants.Count);
 
             playableLetter = commonConsonants[index];
+
+            whileCount++;
         }
 
         Debug.Log(string.Format("AI Letter: {0}", playableLetter));
@@ -115,6 +136,8 @@ public class PlayerAI : Player {
             index = Random.Range(0, unusualConsonants.Count);
 
             playableLetter = unusualConsonants[index];
+
+            whileCount++;
         }
 
         Debug.Log(string.Format("AI Letter: {0}", playableLetter));
