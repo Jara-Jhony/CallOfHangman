@@ -4613,7 +4613,7 @@ MonoBehaviour:
   - {fileID: 871183155}
   - {fileID: 1723859140}
   - {fileID: 958357723}
-  timer: {fileID: 0}
+  timer: {fileID: 2123387541}
   currentInputFieldText: 
 --- !u!1 &733505397
 GameObject:
@@ -14496,7 +14496,7 @@ MonoBehaviour:
   - {fileID: 533169807}
   - {fileID: 2057980631}
   - {fileID: 1472713626}
-  timer: {fileID: 0}
+  timer: {fileID: 1283895072}
   currentInputFieldText: 
   letterButton: {fileID: 302635891}
 --- !u!1 &2051833881

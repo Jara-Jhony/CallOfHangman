@@ -64,8 +64,6 @@ public abstract class UserInterface : MonoBehaviour {
     {
         Observer.Singleton.onPlayerOneEndsTurn += SetTurnTextPlayerTwo;
         Observer.Singleton.onPlayerTwoEndsTurn += SetTurnTextPlayerOne;
-
-        timer.StartWatch();
     }
 
     public virtual void SetWinnerScreen(int winner)

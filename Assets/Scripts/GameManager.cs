@@ -218,6 +218,8 @@ public class GameManager : MonoBehaviour {
 
         UIFacade.Singleton.singleplayer.SetActiveSingleplayerScreen(0, false);
         UIFacade.Singleton.singleplayer.SetActiveSingleplayerScreen(1, true);
+
+        StartCoroutine(ExecuteTimer());
     }
 
     private void SetPlayerWordCaseLocalMultiplayer()
@@ -231,6 +233,8 @@ public class GameManager : MonoBehaviour {
         {
             UIFacade.Singleton.localMultiplayer.SetActiveLocalMultiplayerScreen(0, false);
             UIFacade.Singleton.localMultiplayer.SetActiveLocalMultiplayerScreen(1, true);
+
+            StartCoroutine(ExecuteTimer());
         }
     }
 
@@ -245,6 +249,8 @@ public class GameManager : MonoBehaviour {
         {
             UIFacade.Singleton.onlineMultiplayer.SetActiveOnlineMultiplayerScreen(0, false);
             UIFacade.Singleton.onlineMultiplayer.SetActiveOnlineMultiplayerScreen(1, true);
+
+            StartCoroutine(ExecuteTimer());
         }
     }
 
@@ -445,5 +451,28 @@ public class GameManager : MonoBehaviour {
         UIFacade.Singleton.onlineMultiplayer.SetWinnerScreen(winner);
         UIFacade.Singleton.onlineMultiplayer.SetActiveOnlineMultiplayerScreen(1, false);
         UIFacade.Singleton.onlineMultiplayer.SetActiveOnlineMultiplayerScreen(2, true);
+    }
+
+    private IEnumerator ExecuteTimer()
+    {
+        yield return null;
+
+        switch (gameMode)
+        {
+            case 1:
+                UIFacade.Singleton.singleplayer.timer.StartWatch();
+                break;
+
+            case 2:
+                UIFacade.Singleton.localMultiplayer.timer.StartWatch();
+                break;
+
+            case 3:
+                UIFacade.Singleton.onlineMultiplayer.timer.StartWatch();
+                break;
+
+            default:
+                break;
+        }
     }
 }

@@ -80,7 +80,7 @@ public class PlayerAI : Player {
 
     private void PlayVocal()
     {
-        int index = 0;
+        int index = Random.Range(0, vocals.Count);
 
         while (playedChars.Contains(playableLetter))
         {
@@ -94,13 +94,13 @@ public class PlayerAI : Player {
 
     private void PlayCommonConsonant()
     {
-        int index = 0;
+        int index = Random.Range(0, commonConsonants.Count);
 
         while (playedChars.Contains(playableLetter))
         {
-            index = Random.Range(0, vocals.Count);
+            index = Random.Range(0, commonConsonants.Count);
 
-            playableLetter = vocals[index];
+            playableLetter = commonConsonants[index];
         }
 
         Debug.Log(string.Format("AI Letter: {0}", playableLetter));
@@ -108,13 +108,13 @@ public class PlayerAI : Player {
 
     private void PlayUnusualConsonant()
     {
-        int index = 0;
+        int index = Random.Range(0, unusualConsonants.Count);
 
         while (playedChars.Contains(playableLetter))
         {
-            index = Random.Range(0, vocals.Count);
+            index = Random.Range(0, unusualConsonants.Count);
 
-            playableLetter = vocals[index];
+            playableLetter = unusualConsonants[index];
         }
 
         Debug.Log(string.Format("AI Letter: {0}", playableLetter));
