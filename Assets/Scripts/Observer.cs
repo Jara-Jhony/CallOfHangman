@@ -85,36 +85,72 @@ public class Observer : MonoBehaviour {
 
     public void WordInputFieldEnterSingleplayer()
     {
+        if (UIFacade.Singleton.singleplayer.currentInputFieldText == "")
+        {
+            AudioManager.Singleton.PlayEffect("Error");
+            return;
+        }
+
         if (onWordInputFieldEnterSingleplayer != null)
             onWordInputFieldEnterSingleplayer();
     }
 
     public void LetterInputFieldEnterSingleplayer()
     {
+        if (UIFacade.Singleton.singleplayer.currentInputFieldText == "")
+        {
+            AudioManager.Singleton.PlayEffect("Error");
+            return;
+        }
+
         if (onLetterInputFieldEnterSingleplayer != null)
             onLetterInputFieldEnterSingleplayer();
     }
 
     public void WordInputFieldEnterLocalMultiplayer()
     {
+        if (UIFacade.Singleton.localMultiplayer.currentInputFieldText == "")
+        {
+            AudioManager.Singleton.PlayEffect("Error");
+            return;
+        }
+
         if (onWordInputFieldEnterLocalMultiplayer != null)
             onWordInputFieldEnterLocalMultiplayer();
     }
 
     public void LetterInputFieldEnterLocalMultiplayer()
     {
+        if (UIFacade.Singleton.localMultiplayer.currentInputFieldText == "")
+        {
+            AudioManager.Singleton.PlayEffect("Error");
+            return;
+        }
+
         if (onLetterInputFieldEnterLocalMultiplayer != null)
             onLetterInputFieldEnterLocalMultiplayer();
     }
 
     public void WordInputFieldEnterOnlineMultiplayer()
     {
+        if (UIFacade.Singleton.onlineMultiplayer.currentInputFieldText == "")
+        {
+            AudioManager.Singleton.PlayEffect("Error");
+            return;
+        }
+
         if (onWordInputFieldEnterOnlineMultiplayer != null)
             onWordInputFieldEnterOnlineMultiplayer();
     }
 
     public void LetterInputFieldEnterOnlineMultiplayer()
     {
+        if (UIFacade.Singleton.onlineMultiplayer.currentInputFieldText == "")
+        {
+            AudioManager.Singleton.PlayEffect("Error");
+            return;
+        }
+
         if (onLetterInputFieldEnterOnlineMultiplayer != null)
             onLetterInputFieldEnterOnlineMultiplayer();
     }

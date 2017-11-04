@@ -326,9 +326,15 @@ public class GameManager : MonoBehaviour {
 
         //Are not matched chars in the word ???
         if (correctChars.Count == 0)
+        {
             UIFacade.Singleton.singleplayer.UpdateErrors(playerInTurn);
+        }
         else
+        {
             UIFacade.Singleton.singleplayer.UpdateSuccess(playerInTurn, correctChars);
+
+            AudioManager.Singleton.PlayEffect("Success");
+        }
 
         if (players[playerInTurn].errorsCount >= 10)
         {
@@ -359,9 +365,15 @@ public class GameManager : MonoBehaviour {
 
         //Are not matched chars in the word ???
         if (correctChars.Count == 0)
+        {
             UIFacade.Singleton.localMultiplayer.UpdateErrors(playerInTurn);
+        }
         else
+        {
             UIFacade.Singleton.localMultiplayer.UpdateSuccess(playerInTurn, correctChars);
+
+            AudioManager.Singleton.PlayEffect("Success");
+        }
 
         if (players[playerInTurn].errorsCount >= 10)
         {
@@ -392,9 +404,15 @@ public class GameManager : MonoBehaviour {
 
         //Are not matched chars in the word ???
         if (correctChars.Count == 0)
+        {
             UIFacade.Singleton.onlineMultiplayer.UpdateErrors(playerInTurn);
+        }
         else
+        {
             UIFacade.Singleton.onlineMultiplayer.UpdateSuccess(playerInTurn, correctChars);
+
+            AudioManager.Singleton.PlayEffect("Success");
+        }
 
         if (players[playerInTurn].errorsCount >= 10)
         {

@@ -22,4 +22,20 @@ public class Singleplayer : UserInterface {
         letterButton.interactable = state;
         letterInputField.interactable = state;
     }
+
+    public override void SetWinnerScreen(int winner)
+    {
+        int losser = (winner + 1) % 2;
+
+        if (winner == 0)
+            playerWinner.text = "PLAYER 1 WIN!";
+        else
+            playerWinner.text = "PLAYER AI WIN!";
+
+        playersWords[winner].text = GameManager.Singleton.players[winner].word;
+        playersWords[losser].text = GameManager.Singleton.players[losser].word;
+
+        playersErrors[0].text = playerOneErrors.text;
+        playersErrors[1].text = playerTwoErrors.text;
+    }
 }
