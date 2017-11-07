@@ -6,7 +6,6 @@ public class Observer : MonoBehaviour {
     //Actions
     public Action onSingleplayer;
     public Action onLocalMultiplayer;
-    public Action onOnlineMultiplayer;
     public Action onReadme;
     public Action onPlayerOneEndsTurn;
     public Action onPlayerTwoEndsTurn;
@@ -17,9 +16,6 @@ public class Observer : MonoBehaviour {
     //Input field Actions for local multiplayer
     public Action onWordInputFieldEnterLocalMultiplayer;
     public Action onLetterInputFieldEnterLocalMultiplayer;
-    //Input field Actions for online multiplayer
-    public Action onWordInputFieldEnterOnlineMultiplayer;
-    public Action onLetterInputFieldEnterOnlineMultiplayer;
 
     //Singleton!
     public static Observer Singleton
@@ -49,14 +45,6 @@ public class Observer : MonoBehaviour {
 
         if (onLocalMultiplayer != null)
             onLocalMultiplayer();
-    }
-
-    public void OnlineMultiplayer()
-    {
-        Debug.Log("OnlineMultiplayer");
-
-        if (onOnlineMultiplayer != null)
-            onOnlineMultiplayer();
     }
 
     public void Readme()
@@ -129,29 +117,5 @@ public class Observer : MonoBehaviour {
 
         if (onLetterInputFieldEnterLocalMultiplayer != null)
             onLetterInputFieldEnterLocalMultiplayer();
-    }
-
-    public void WordInputFieldEnterOnlineMultiplayer()
-    {
-        if (UIFacade.Singleton.onlineMultiplayer.currentInputFieldText == "")
-        {
-            AudioManager.Singleton.PlayEffect("Error");
-            return;
-        }
-
-        if (onWordInputFieldEnterOnlineMultiplayer != null)
-            onWordInputFieldEnterOnlineMultiplayer();
-    }
-
-    public void LetterInputFieldEnterOnlineMultiplayer()
-    {
-        if (UIFacade.Singleton.onlineMultiplayer.currentInputFieldText == "")
-        {
-            AudioManager.Singleton.PlayEffect("Error");
-            return;
-        }
-
-        if (onLetterInputFieldEnterOnlineMultiplayer != null)
-            onLetterInputFieldEnterOnlineMultiplayer();
     }
 }

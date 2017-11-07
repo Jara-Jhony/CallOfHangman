@@ -42,7 +42,7 @@ public abstract class UserInterface : MonoBehaviour {
     [HideInInspector]
     public string currentInputFieldText;
 
-    private void Start()
+    protected void Start()
     {
         if (wordInputField == null || letterInputField == null)
             return;
@@ -106,19 +106,10 @@ public abstract class UserInterface : MonoBehaviour {
     {
         GameManager.Singleton.players[playerInTurn].IncreaseErrorsCount();
 
-        switch (playerInTurn)
-        {
-            case 0:
-                playerOneErrors.text = string.Format("Player 1 Errors: {0}/10", GameManager.Singleton.players[0].errorsCount);
-                break;
-
-            case 1:
-                playerTwoErrors.text = string.Format("Player 2 Errors: {0}/10", GameManager.Singleton.players[1].errorsCount);
-                break;
-
-            default:
-                break;
-        }
+        if (playerInTurn == 0)
+            playerOneErrors.text = string.Format("Player 1 Errors: {0}/10", GameManager.Singleton.players[0].errorsCount);
+        else
+            playerTwoErrors.text = string.Format("Player 2 Errors: {0}/10", GameManager.Singleton.players[1].errorsCount);
     }
 
     public virtual void UpdateSuccess(int playerInTurn, Dictionary<int, char> correctChars)
@@ -131,19 +122,10 @@ public abstract class UserInterface : MonoBehaviour {
             {
                 GameManager.Singleton.players[playerInTurn].IncreaseSuccessCount();
 
-                switch (otherPlayer)
-                {
-                    case 0:
-                        playerOneEmptyTexts[i].text = GameManager.Singleton.players[0].wordCharsArray[i].ToString();
-                        break;
-
-                    case 1:
-                        playerTwoEmptyTexts[i].text = GameManager.Singleton.players[1].wordCharsArray[i].ToString();
-                        break;
-
-                    default:
-                        break;
-                }
+                if (otherPlayer == 0)
+                    playerOneEmptyTexts[i].text = GameManager.Singleton.players[0].wordCharsArray[i].ToString();
+                else
+                    playerTwoEmptyTexts[i].text = GameManager.Singleton.players[1].wordCharsArray[i].ToString();
             }
         }
     }

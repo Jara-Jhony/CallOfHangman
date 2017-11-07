@@ -47,20 +47,15 @@ public class Player : MonoBehaviour {
     {
         this.index = index;
 
-        switch (index)
+        if (index == 0)
         {
-            case 0:
-                Observer.Singleton.onPlayerTwoEndsTurn += Turn;
-                Observer.Singleton.onPlayerOneEndsTurn += EndTurn;
-                break;
-
-            case 1:
-                Observer.Singleton.onPlayerOneEndsTurn += Turn;
-                Observer.Singleton.onPlayerTwoEndsTurn += EndTurn;
-                break;
-
-            default:
-                return;
+            Observer.Singleton.onPlayerTwoEndsTurn += Turn;
+            Observer.Singleton.onPlayerOneEndsTurn += EndTurn;
+        }
+        else
+        {
+            Observer.Singleton.onPlayerOneEndsTurn += Turn;
+            Observer.Singleton.onPlayerTwoEndsTurn += EndTurn;
         }
 
         Debug.Log(string.Format("Player {0} created!", index));
@@ -80,10 +75,6 @@ public class Player : MonoBehaviour {
 
             case 2:
                 SetWordCaseLocalMultiplayer();
-                break;
-
-            case 3:
-                SetWordOnlineMultiplayer();
                 break;
 
             default:
@@ -118,58 +109,29 @@ public class Player : MonoBehaviour {
 
     private void SetWordCaseSingleplayer()
     {
-        switch (index)
+        if (index == 0)
         {
-            case 0:
-                for (int i = UIFacade.Singleton.singleplayer.playerOneEmptyTexts.Length - 1; i > wordCharsArray.Length - 1; i--)
-                    UIFacade.Singleton.singleplayer.playerOneEmptyTexts[i].gameObject.SetActive(false);
-                break;
-
-            case 1:
-                for (int i = UIFacade.Singleton.singleplayer.playerTwoEmptyTexts.Length - 1; i > wordCharsArray.Length - 1; i--)
-                    UIFacade.Singleton.singleplayer.playerTwoEmptyTexts[i].gameObject.SetActive(false);
-                break;
-
-            default:
-                break;
+            for (int i = UIFacade.Singleton.singleplayer.playerOneEmptyTexts.Length - 1; i > wordCharsArray.Length - 1; i--)
+                UIFacade.Singleton.singleplayer.playerOneEmptyTexts[i].gameObject.SetActive(false);
+        }
+        else
+        {
+            for (int i = UIFacade.Singleton.singleplayer.playerTwoEmptyTexts.Length - 1; i > wordCharsArray.Length - 1; i--)
+                UIFacade.Singleton.singleplayer.playerTwoEmptyTexts[i].gameObject.SetActive(false);
         }
     }
 
     private void SetWordCaseLocalMultiplayer()
     {
-        switch (index)
+        if (index == 0)
         {
-            case 0:
-                for (int i = UIFacade.Singleton.localMultiplayer.playerOneEmptyTexts.Length - 1; i > wordCharsArray.Length - 1; i--)
-                    UIFacade.Singleton.localMultiplayer.playerOneEmptyTexts[i].gameObject.SetActive(false);
-                break;
-
-            case 1:
-                for (int i = UIFacade.Singleton.localMultiplayer.playerTwoEmptyTexts.Length - 1; i > wordCharsArray.Length - 1; i--)
-                    UIFacade.Singleton.localMultiplayer.playerTwoEmptyTexts[i].gameObject.SetActive(false);
-                break;
-
-            default:
-                break;
+            for (int i = UIFacade.Singleton.localMultiplayer.playerOneEmptyTexts.Length - 1; i > wordCharsArray.Length - 1; i--)
+                UIFacade.Singleton.localMultiplayer.playerOneEmptyTexts[i].gameObject.SetActive(false);
         }
-    }
-
-    private void SetWordOnlineMultiplayer()
-    {
-        switch (index)
+        else
         {
-            case 0:
-                for (int i = UIFacade.Singleton.onlineMultiplayer.playerOneEmptyTexts.Length - 1; i > wordCharsArray.Length - 1; i--)
-                    UIFacade.Singleton.onlineMultiplayer.playerOneEmptyTexts[i].gameObject.SetActive(false);
-                break;
-
-            case 1:
-                for (int i = UIFacade.Singleton.onlineMultiplayer.playerTwoEmptyTexts.Length - 1; i > wordCharsArray.Length - 1; i--)
-                    UIFacade.Singleton.onlineMultiplayer.playerTwoEmptyTexts[i].gameObject.SetActive(false);
-                break;
-
-            default:
-                break;
+            for (int i = UIFacade.Singleton.localMultiplayer.playerTwoEmptyTexts.Length - 1; i > wordCharsArray.Length - 1; i--)
+                UIFacade.Singleton.localMultiplayer.playerTwoEmptyTexts[i].gameObject.SetActive(false);
         }
     }
 
@@ -191,10 +153,6 @@ public class Player : MonoBehaviour {
                         UIFacade.Singleton.localMultiplayer.playersWordsObjects[1].SetActive(true);
                         break;
 
-                    case 3:
-                        UIFacade.Singleton.onlineMultiplayer.playersWordsObjects[1].SetActive(true);
-                        break;
-
                     default:
                         break;
                 }
@@ -209,10 +167,6 @@ public class Player : MonoBehaviour {
 
                     case 2:
                         UIFacade.Singleton.localMultiplayer.playersWordsObjects[0].SetActive(true);
-                        break;
-
-                    case 3:
-                        UIFacade.Singleton.onlineMultiplayer.playersWordsObjects[0].SetActive(true);
                         break;
 
                     default:
@@ -239,10 +193,6 @@ public class Player : MonoBehaviour {
                     case 2:
                         UIFacade.Singleton.localMultiplayer.playersWordsObjects[1].SetActive(false);
                         break;
-
-                    case 3:
-                        UIFacade.Singleton.onlineMultiplayer.playersWordsObjects[1].SetActive(false);
-                        break;
                 }
             }
             else
@@ -255,10 +205,6 @@ public class Player : MonoBehaviour {
 
                     case 2:
                         UIFacade.Singleton.localMultiplayer.playersWordsObjects[0].SetActive(false);
-                        break;
-
-                    case 3:
-                        UIFacade.Singleton.onlineMultiplayer.playersWordsObjects[0].SetActive(false);
                         break;
                 }
             }

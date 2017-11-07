@@ -59,7 +59,7 @@ public class PlayerAI : Player {
 
         yield return new WaitForSeconds(0.25f);
 
-        playableTurn = (int)((GameManager.Singleton.turn * 0.5) - 0.5f) + 1;
+        playableTurn = (int)((GameManager.Singleton.turn * 0.5) + 0.5f);
 
         //Behaviour factor decides what play the AI
         behaviourFactor = playableTurn + Random.Range(-behaviourGap, behaviourGap) * behaviourDistribution.Evaluate(Random.Range(0, 1));

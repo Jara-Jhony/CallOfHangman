@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour {
     [SerializeField]
     private PlayerAI playerAIPrefab;
 
-    public int gameMode // 0. No game selected, 1. Singleplayer, 2. Local Multiplayer, 3. Online Multiplayer
+    public int gameMode // 0. No game selected, 1. Singleplayer, 2. Local Multiplayer
     {
         get; private set;
     }
@@ -86,19 +86,6 @@ public class GameManager : MonoBehaviour {
         UIFacade.Singleton.localMultiplayer.SetActiveLocalMultiplayer(true);
     }
 
-    public void SetupOnlineMultiplayer()
-    {
-        gameMode = 3;
-
-        CreatePlayers();
-
-        SuscribeToOnlineMultiplayerEvents();
-
-        UIFacade.Singleton.onlineMultiplayer.Setup();
-        UIFacade.Singleton.SetActiveMainMenu(false);
-        UIFacade.Singleton.onlineMultiplayer.SetActiveOnlineMultiplayer(true);
-    }
-
     public void NextTurn()
     {
         turn++;
@@ -113,8 +100,7 @@ public class GameManager : MonoBehaviour {
 
     private void CreatePlayers()
     {
-        if (players == null)
-            players = new Player[2];
+        players = new Player[2];
 
         players[0] = Instantiate(playerPrefab) as Player;
         players[0].SetIndex(0);
@@ -126,8 +112,7 @@ public class GameManager : MonoBehaviour {
 
     private void CreatePlayerWithAI()
     {
-        if (players == null)
-            players = new Player[2];
+        players = new Player[2];
 
         players[0] = Instantiate(playerPrefab) as Player;
         players[0].SetIndex(0);
@@ -145,7 +130,6 @@ public class GameManager : MonoBehaviour {
         //Subscribing to the game modes
         Observer.Singleton.onSingleplayer += SetupSingleplayer;
         Observer.Singleton.onLocalMultiplayer += SetupLocalMultiplayer;
-        Observer.Singleton.onOnlineMultiplayer += SetupOnlineMultiplayer;
     }
 
     private void SuscribeToSingleplayerEvents()
@@ -180,18 +164,6 @@ public class GameManager : MonoBehaviour {
         Observer.Singleton.onLetterInputFieldEnterLocalMultiplayer += UIFacade.Singleton.localMultiplayer.ClearInputFields;
     }
 
-    private void SuscribeToOnlineMultiplayerEvents()
-    {
-        //Subscribing to the word input field events
-        Observer.Singleton.onWordInputFieldEnterOnlineMultiplayer += SetPlayerWord;
-        Observer.Singleton.onWordInputFieldEnterOnlineMultiplayer += NextTurn;
-        Observer.Singleton.onWordInputFieldEnterOnlineMultiplayer += UIFacade.Singleton.onlineMultiplayer.ClearInputFields;
-        //Subscribing to the letter input field events
-        Observer.Singleton.onLetterInputFieldEnterOnlineMultiplayer += CheckForCharOnRivalPlayerWord;
-        Observer.Singleton.onLetterInputFieldEnterOnlineMultiplayer += NextTurn;
-        Observer.Singleton.onLetterInputFieldEnterOnlineMultiplayer += UIFacade.Singleton.onlineMultiplayer.ClearInputFields;
-    }
-
     //SET PLAYER WORD CASES!
 
     public void SetPlayerWord()
@@ -204,10 +176,6 @@ public class GameManager : MonoBehaviour {
 
             case 2:
                 SetPlayerWordCaseLocalMultiplayer();
-                break;
-
-            case 3:
-                SetPlayerWordCaseOnlineMultiplayer();
                 break;
         }
     }
@@ -238,22 +206,6 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    private void SetPlayerWordCaseOnlineMultiplayer()
-    {
-        players[playerInTurn].SetWord(UIFacade.Singleton.onlineMultiplayer.currentInputFieldText);
-
-        if (turn == 0)
-            UIFacade.Singleton.onlineMultiplayer.playerTurnWordScreen.text =
-                string.Format("Player 1 close your eyes, Player 2 select a word.");
-        if (turn == 1)
-        {
-            UIFacade.Singleton.onlineMultiplayer.SetActiveOnlineMultiplayerScreen(0, false);
-            UIFacade.Singleton.onlineMultiplayer.SetActiveOnlineMultiplayerScreen(1, true);
-
-            StartCoroutine(ExecuteTimer());
-        }
-    }
-
     //CHECK FOR CHAR ON RIVAL PLAYER WORD CASES!
 
     public void CheckForCharOnRivalPlayerWord()
@@ -266,10 +218,6 @@ public class GameManager : MonoBehaviour {
 
             case 2:
                 CheckForCharOnRivalPlayerWordCaseLocalMultiplayer();
-                break;
-
-            case 3:
-                CheckForCharOnRivalPlayerWordCaseOnlineMultiplayer();
                 break;
 
             default:
@@ -388,45 +336,6 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    private void CheckForCharOnRivalPlayerWordCaseOnlineMultiplayer()
-    {
-        char playedChar = UIFacade.Singleton.onlineMultiplayer.currentInputFieldText[0];
-
-        //Is the char selected alredy played ???
-        if (players[playerInTurn].playedChars.Contains(playedChar))
-            return;
-        else
-            players[playerInTurn].playedChars.Add(playedChar);
-
-        int otherPlayer = (playerInTurn + 1) % 2;
-
-        Dictionary<int, char> correctChars = players[otherPlayer].CheckForCharsInWord(playedChar);
-
-        //Are not matched chars in the word ???
-        if (correctChars.Count == 0)
-        {
-            UIFacade.Singleton.onlineMultiplayer.UpdateErrors(playerInTurn);
-        }
-        else
-        {
-            UIFacade.Singleton.onlineMultiplayer.UpdateSuccess(playerInTurn, correctChars);
-
-            AudioManager.Singleton.PlayEffect("Success");
-        }
-
-        if (players[playerInTurn].errorsCount >= 10)
-        {
-            GameOver(otherPlayer);
-            return;
-        }
-
-        if (players[playerInTurn].sucessCount == players[otherPlayer].wordCharsArray.Length)
-        {
-            GameOver(playerInTurn);
-            return;
-        }
-    }
-
     //GAME OVER CASES!
 
     public void GameOver(int winner)
@@ -439,10 +348,6 @@ public class GameManager : MonoBehaviour {
 
             case 2:
                 GameOverCaseLocalMultiplayer(winner);
-                break;
-
-            case 3:
-                GameOverCaseOnlineMultiplayer(winner);
                 break;
 
             default:
@@ -464,13 +369,6 @@ public class GameManager : MonoBehaviour {
         UIFacade.Singleton.localMultiplayer.SetActiveLocalMultiplayerScreen(2, true);
     }
 
-    private void GameOverCaseOnlineMultiplayer(int winner)
-    {
-        UIFacade.Singleton.onlineMultiplayer.SetWinnerScreen(winner);
-        UIFacade.Singleton.onlineMultiplayer.SetActiveOnlineMultiplayerScreen(1, false);
-        UIFacade.Singleton.onlineMultiplayer.SetActiveOnlineMultiplayerScreen(2, true);
-    }
-
     private IEnumerator ExecuteTimer()
     {
         yield return null;
@@ -483,10 +381,6 @@ public class GameManager : MonoBehaviour {
 
             case 2:
                 UIFacade.Singleton.localMultiplayer.timer.StartWatch();
-                break;
-
-            case 3:
-                UIFacade.Singleton.onlineMultiplayer.timer.StartWatch();
                 break;
 
             default:

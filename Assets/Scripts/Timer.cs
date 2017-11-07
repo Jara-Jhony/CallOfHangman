@@ -13,6 +13,7 @@ public class Timer : MonoBehaviour {
 
     private float minutes;
     private float seconds;
+
     private bool isWatching;
 
     private IEnumerator watch;

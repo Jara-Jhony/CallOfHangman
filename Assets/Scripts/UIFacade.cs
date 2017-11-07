@@ -12,7 +12,6 @@ public class UIFacade : MonoBehaviour {
 
     public Singleplayer singleplayer;
     public LocalMultiplayer localMultiplayer;
-    public OnlineMultiplayer onlineMultiplayer;
 
     //Singleton!
     public static UIFacade Singleton
