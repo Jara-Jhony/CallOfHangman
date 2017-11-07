@@ -37,6 +37,15 @@ public abstract class UserInterface : MonoBehaviour {
 
     [Space(10f)]
 
+    [SerializeField]
+    private Image letterInputFieldImage;
+    [SerializeField]
+    private Image letterButonImage;
+    [SerializeField]
+    private Color playerOneColor;
+    [SerializeField]
+    private Color playerTwoColor;
+
     public Timer timer;
 
     [HideInInspector]
@@ -58,6 +67,8 @@ public abstract class UserInterface : MonoBehaviour {
         {
             return ValidateChar(addedChar);
         };
+
+        UpdateLetterSectionColor();
     }
 
     public void Setup()
@@ -134,6 +145,20 @@ public abstract class UserInterface : MonoBehaviour {
     {
         wordInputField.text = "";
         letterInputField.text = "";
+    }
+
+    public virtual void UpdateLetterSectionColor()
+    {
+        if (GameManager.Singleton.playerInTurn == 0)
+        {
+            letterInputFieldImage.color = playerOneColor;
+            letterButonImage.color = playerOneColor;
+        }
+        else
+        {
+            letterInputFieldImage.color = playerTwoColor;
+            letterButonImage.color = playerTwoColor;
+        }
     }
 
     protected void SetTurnTextPlayerOne()

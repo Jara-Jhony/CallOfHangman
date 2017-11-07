@@ -142,6 +142,7 @@ public class GameManager : MonoBehaviour {
         Observer.Singleton.onLetterInputFieldEnterSingleplayer += CheckForCharOnRivalPlayerWord;
         Observer.Singleton.onLetterInputFieldEnterSingleplayer += NextTurn;
         Observer.Singleton.onLetterInputFieldEnterSingleplayer += UIFacade.Singleton.singleplayer.ClearInputFields;
+        Observer.Singleton.onLetterInputFieldEnterSingleplayer += UIFacade.Singleton.singleplayer.UpdateLetterSectionColor;
 
         //AI!
         PlayerAI playerAI = players[1].GetComponent<PlayerAI>();
@@ -162,6 +163,7 @@ public class GameManager : MonoBehaviour {
         Observer.Singleton.onLetterInputFieldEnterLocalMultiplayer += CheckForCharOnRivalPlayerWord;
         Observer.Singleton.onLetterInputFieldEnterLocalMultiplayer += NextTurn;
         Observer.Singleton.onLetterInputFieldEnterLocalMultiplayer += UIFacade.Singleton.localMultiplayer.ClearInputFields;
+        Observer.Singleton.onLetterInputFieldEnterLocalMultiplayer += UIFacade.Singleton.localMultiplayer.UpdateLetterSectionColor;
     }
 
     //SET PLAYER WORD CASES!

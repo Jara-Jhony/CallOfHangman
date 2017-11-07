@@ -3172,6 +3172,10 @@ MonoBehaviour:
   - {fileID: 871183155}
   - {fileID: 1723859140}
   - {fileID: 958357723}
+  letterInputFieldImage: {fileID: 1087724503}
+  letterButonImage: {fileID: 223110497}
+  playerOneColor: {r: 0.7058824, g: 0.9411765, b: 0.9411765, a: 1}
+  playerTwoColor: {r: 0.9411765, g: 0.7058824, b: 0.7058824, a: 1}
   timer: {fileID: 2123387541}
   currentInputFieldText: 
 --- !u!1 &759189955
@@ -10550,6 +10554,10 @@ MonoBehaviour:
   - {fileID: 533169807}
   - {fileID: 2057980631}
   - {fileID: 1472713626}
+  letterInputFieldImage: {fileID: 1985117001}
+  letterButonImage: {fileID: 302635892}
+  playerOneColor: {r: 0.7058824, g: 0.9411765, b: 0.9411765, a: 1}
+  playerTwoColor: {r: 0.9411765, g: 0.7058824, b: 0.7058824, a: 1}
   timer: {fileID: 1283895072}
   currentInputFieldText: 
   letterButton: {fileID: 302635891}

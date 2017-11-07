@@ -80,6 +80,10 @@ public class PlayerAI : Player {
         yield return null;
 
         GameManager.Singleton.NextTurn();
+
+        yield return null;
+
+        UIFacade.Singleton.singleplayer.UpdateLetterSectionColor();
     }
 
     private void PlayVocal()
