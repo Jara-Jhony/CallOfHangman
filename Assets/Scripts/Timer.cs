@@ -4,7 +4,12 @@ using UnityEngine.UI;
 
 public class Timer : MonoBehaviour {
 
-    private Text timeText;
+    public Text timeText;
+
+    public bool isWatching
+    {
+        get; private set;
+    }
 
     public float time
     {
@@ -13,8 +18,6 @@ public class Timer : MonoBehaviour {
 
     private float minutes;
     private float seconds;
-
-    private bool isWatching;
 
     private IEnumerator watch;
 

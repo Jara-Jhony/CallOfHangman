@@ -7,6 +7,8 @@ public class UIFacade : MonoBehaviour {
     private GameObject mainMenu;
     [SerializeField]
     private GameObject readme;
+    [SerializeField]
+    private GameObject matchData;
 
     [Space(10f)]
 
@@ -30,6 +32,7 @@ public class UIFacade : MonoBehaviour {
     private void Start()
     {
         Observer.Singleton.onReadme += DoneReadme;
+        Observer.Singleton.onMatchData += DoneMatchData;
     }
 
     public void SetActiveMainMenu(bool state)
@@ -48,5 +51,13 @@ public class UIFacade : MonoBehaviour {
             readme.SetActive(false);
         else
             readme.SetActive(true);
+    }
+
+    public void DoneMatchData()
+    {
+        if (matchData.activeInHierarchy)
+            matchData.SetActive(false);
+        else
+            matchData.SetActive(true);
     }
 }

@@ -7,6 +7,7 @@ public class Observer : MonoBehaviour {
     public Action onSingleplayer;
     public Action onLocalMultiplayer;
     public Action onReadme;
+    public Action onMatchData;
     public Action onPlayerOneEndsTurn;
     public Action onPlayerTwoEndsTurn;
 
@@ -53,6 +54,14 @@ public class Observer : MonoBehaviour {
 
         if (onReadme != null)
             onReadme();
+    }
+
+    public void MatchData()
+    {
+        Debug.Log("MatchData");
+
+        if (onMatchData != null)
+            onMatchData();
     }
 
     public void PlayerOneEndsTurn()

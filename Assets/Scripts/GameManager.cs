@@ -359,6 +359,11 @@ public class GameManager : MonoBehaviour {
 
     private void GameOverCaseSingleplayer(int winner)
     {
+        if (UIFacade.Singleton.singleplayer.timer.isWatching)
+            UIFacade.Singleton.singleplayer.timer.StopWatch();
+
+        UIFacade.Singleton.singleplayer.SaveMatchData(winner);
+
         UIFacade.Singleton.singleplayer.SetWinnerScreen(winner);
         UIFacade.Singleton.singleplayer.SetActiveSingleplayerScreen(1, false);
         UIFacade.Singleton.singleplayer.SetActiveSingleplayerScreen(2, true);
@@ -366,6 +371,11 @@ public class GameManager : MonoBehaviour {
 
     private void GameOverCaseLocalMultiplayer(int winner)
     {
+        if (UIFacade.Singleton.localMultiplayer.timer.isWatching)
+            UIFacade.Singleton.localMultiplayer.timer.StopWatch();
+
+        UIFacade.Singleton.localMultiplayer.SaveMatchData(winner);
+
         UIFacade.Singleton.localMultiplayer.SetWinnerScreen(winner);
         UIFacade.Singleton.localMultiplayer.SetActiveLocalMultiplayerScreen(1, false);
         UIFacade.Singleton.localMultiplayer.SetActiveLocalMultiplayerScreen(2, true);

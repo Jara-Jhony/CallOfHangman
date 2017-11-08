@@ -46,7 +46,13 @@ public abstract class UserInterface : MonoBehaviour {
     [SerializeField]
     private Color playerTwoColor;
 
+    [Space(10f)]
+
     public Timer timer;
+
+    [Space(10f)]
+
+    public Score scoreAsset;
 
     [HideInInspector]
     public string currentInputFieldText;
@@ -159,6 +165,19 @@ public abstract class UserInterface : MonoBehaviour {
             letterInputFieldImage.color = playerTwoColor;
             letterButonImage.color = playerTwoColor;
         }
+    }
+
+    public virtual void SaveMatchData(int winner)
+    {
+        string playerWinner = (GameManager.Singleton.gameMode == 1 && winner == 1) ? "Player AI" : string.Format("Player {0}", (winner + 1).ToString());
+
+        scoreAsset.Save(
+            timer.timeText.text,
+            GameManager.Singleton.players[0].errorsCount,
+            GameManager.Singleton.players[1].errorsCount,
+            playerWinner);
+
+        ScoreHandler.Singleton.UpdateMatchTexts();
     }
 
     protected void SetTurnTextPlayerOne()
